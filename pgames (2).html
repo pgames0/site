@@ -1,0 +1,3110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pgames · Артбуки, аниме и манга из Японии — アートブック・アニメ・漫画</title>
+
+  <!-- Google Fonts: Inter для UI + Cormorant Garamond & Noto Serif JP для редакционных заголовков -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@500;700&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans JP', 'sans-serif'],
+            editorial: ['Cormorant Garamond', 'Noto Serif JP', 'serif'],
+            jp: ['Noto Sans JP', 'sans-serif'],
+            serifjp: ['Noto Serif JP', 'serif'],
+          },
+          colors: {
+            paper: '#FAF9F6',
+            ink: '#18181B',
+            slateMuted: '#52525B',
+            vermilion: '#D93829',
+            vermilionDark: '#B92B1E',
+            sakura: '#F43F5E',
+            sakuraSoft: '#FFF1F2',
+            hairline: '#E4E4E7',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* Японский редакционный стиль с аниме-героинями */
+    html {
+      scroll-behavior: smooth;
+      background-color: #FAF9F6;
+      color: #18181B;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      background-color: #FAF9F6;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(244, 63, 94, 0.05) 0%, transparent 28%),
+        radial-gradient(circle at 88% 12%, rgba(99, 102, 241, 0.05) 0%, transparent 26%),
+        radial-gradient(#e4e4e7 0.75px, transparent 0.75px);
+      background-size: 100% 100%, 100% 100%, 24px 24px;
+      color: #18181B;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* Книжный переплёт и мягкая тень обложки */
+    .book-cover-frame {
+      position: relative;
+      box-shadow:
+        0 10px 22px -6px rgba(24, 24, 27, 0.14),
+        0 2px 6px -1px rgba(24, 24, 27, 0.08);
+      transition: transform 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .book-card:hover .book-cover-frame {
+      transform: translateY(-4px) rotate(-0.8deg);
+      box-shadow:
+        0 18px 30px -8px rgba(244, 63, 94, 0.2),
+        0 4px 10px -2px rgba(24, 24, 27, 0.1);
+    }
+
+    /* Тонкий блик корешка книги слева */
+    .book-spine-highlight::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 10px;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.34) 0%,
+        rgba(0, 0, 0, 0.12) 45%,
+        rgba(255, 255, 255, 0.14) 75%,
+        rgba(0, 0, 0, 0) 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Вертикальный японский текст */
+    .writing-vertical {
+      writing-mode: vertical-rl;
+      text-orientation: upright;
+    }
+
+    /* Скрытие скроллбара для горизонтальных пилюль фильтров */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* Анимация парящих героинь и лепестков сакуры */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(1deg); }
+    }
+    @keyframes floatDelay {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-6px) rotate(-1.2deg); }
+    }
+    @keyframes sakuraDrift {
+      0% { transform: translateY(-10%) translateX(0) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.75; }
+      85% { opacity: 0.75; }
+      100% { transform: translateY(115%) translateX(25px) rotate(320deg); opacity: 0; }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-float {
+      animation: floatSlow 4.2s ease-in-out infinite;
+    }
+    .animate-float-delay {
+      animation: floatDelay 4.8s ease-in-out infinite;
+    }
+    .sakura-petal {
+      position: absolute;
+      pointer-events: none;
+      animation: sakuraDrift linear infinite;
+    }
+    .animate-fade-in {
+      animation: fadeIn 0.18s ease-out forwards;
+    }
+    .animate-slide-up {
+      animation: slideUp 0.2s ease-out forwards;
+    }
+
+    /* Полутоновой скринтон в стиле манги */
+    .manga-halftone {
+      background-image: radial-gradient(rgba(244, 63, 94, 0.16) 1.2px, transparent 1.2px);
+      background-size: 8px 8px;
+    }
+    .manga-halftone-violet {
+      background-image: radial-gradient(rgba(139, 92, 246, 0.16) 1.2px, transparent 1.2px);
+      background-size: 8px 8px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-rose-500 selection:text-white">
+
+  <!-- ==================== ШАПКА (HEADER) ==================== -->
+  <header class="sticky top-0 z-30 bg-[#FAF9F6]/95 backdrop-blur-md border-b border-[#E4E4E7]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20 gap-2.5 sm:gap-4">
+
+        <!-- Логотип Pgames -->
+        <a href="#" id="logoResetBtn" class="flex items-center gap-2.5 sm:gap-3 shrink-0 group focus:outline-none">
+          <div class="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#D93829] to-rose-600 text-white flex items-center justify-center font-bold text-base sm:text-lg shadow-xs transition-transform duration-150 group-hover:scale-105">
+            PG
+            <span class="absolute -top-1 -right-1 text-[10px] text-rose-200 select-none">✦</span>
+          </div>
+          <div class="flex flex-col">
+            <div class="flex items-center gap-1.5">
+              <span class="font-bold tracking-tight text-base sm:text-lg text-[#18181B]">Pgames</span>
+              <span class="text-rose-500 font-bold">✦</span>
+              <span class="hidden xl:inline font-medium text-sm text-[#18181B]">Артбуки, аниме и манга из Японии</span>
+              <span class="xl:hidden font-medium text-xs sm:text-sm text-[#18181B]">Артбуки и манга</span>
+            </div>
+            <span class="font-jp text-[10px] tracking-[0.16em] text-[#52525B] uppercase">
+              アートブック・アニメ・漫画
+            </span>
+          </div>
+        </a>
+
+        <!-- Поиск (Десктоп) -->
+        <div class="hidden md:flex flex-1 max-w-sm lg:max-w-md relative">
+          <span class="absolute inset-y-0 left-3.5 flex items-center text-zinc-400 pointer-events-none">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+            </svg>
+          </span>
+          <input
+            id="searchInputDesktop"
+            type="search"
+            placeholder="Название, студия, автор или издательство..."
+            class="w-full pl-10 pr-8 py-2 bg-white border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] placeholder:text-zinc-400 focus:outline-none focus:border-rose-500 transition-colors"
+          />
+          <button
+            id="clearSearchDesktop"
+            type="button"
+            aria-label="Очистить поиск"
+            class="hidden absolute inset-y-0 right-2.5 flex items-center text-zinc-400 hover:text-zinc-700"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        <!-- Правые действия: ТГ-канал + Управление каталогом + Корзина -->
+        <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          <!-- Кнопка Telegram-канала -->
+          <a
+            id="headerTgLink"
+            href="https://t.me/your_manga_channel"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-3 py-2 sm:px-3.5 sm:py-2 rounded-xl bg-[#229ED9]/10 hover:bg-[#229ED9] text-[#1877A8] hover:text-white border border-[#229ED9]/25 text-xs sm:text-sm font-medium transition-colors"
+            title="Перейти в наш Telegram-канал с мангой"
+          >
+            <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
+            <span id="headerTgLabel" class="hidden sm:inline">Наш ТГ-канал с мангой</span>
+            <span class="sm:hidden">ТГ-канал</span>
+          </a>
+
+          <!-- Кнопка Управления каталогом -->
+          <button
+            id="openAdminBtn"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#E4E4E7] hover:border-[#18181B] text-xs sm:text-sm font-medium text-[#18181B] transition-colors"
+            title="Управление ценами, статусами и карточками книг"
+          >
+            <svg class="w-4 h-4 text-[#52525B]" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span>Управление</span><span class="hidden xl:inline">&nbsp;каталогом</span>
+          </button>
+
+          <!-- Кнопка корзины -->
+          <button
+            id="openCartBtn"
+            type="button"
+            class="relative inline-flex items-center gap-2 px-3 py-2 sm:px-3.5 sm:py-2 rounded-xl bg-[#18181B] hover:bg-rose-600 text-xs sm:text-sm font-medium text-white transition-colors"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.9" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            <span class="hidden sm:inline">Корзина</span>
+            <span
+              id="cartCountBadge"
+              class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-[#D93829] text-white text-xs font-semibold"
+            >
+              0
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Поиск для мобильных и планшетов -->
+      <div class="md:hidden pb-3">
+        <div class="relative">
+          <span class="absolute inset-y-0 left-3 flex items-center text-zinc-400 pointer-events-none">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" />
+            </svg>
+          </span>
+          <input
+            id="searchInputMobile"
+            type="search"
+            placeholder="Поиск по названию, аниме, студии или автору..."
+            class="w-full pl-9 pr-8 py-2 bg-white border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] placeholder:text-zinc-400 focus:outline-none focus:border-rose-500"
+          />
+          <button
+            id="clearSearchMobile"
+            type="button"
+            aria-label="Очистить поиск"
+            class="hidden absolute inset-y-0 right-2.5 flex items-center text-zinc-400"
+          >
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== ГЕРОЙ-БЛОК (HERO С ПОПУЛЯРНЫМИ АНИМЕ-ГЕРОИНЯМИ) ==================== -->
+  <section class="relative overflow-hidden border-b border-[#E4E4E7] bg-gradient-to-br from-white via-[#FFF9FA] to-[#FAF9F6]">
+    <!-- Декоративные лепестки сакуры -->
+    <div aria-hidden="true" class="pointer-events-none absolute inset-0 overflow-hidden">
+      <svg class="sakura-petal w-4 h-4 text-rose-300/70" style="left: 6%; animation-duration: 9s; animation-delay: 0s;" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C9 6 5 9 5 14c0 3.8 3.1 7 7 7s7-3.2 7-7c0-5-4-8-7-12z"/>
+      </svg>
+      <svg class="sakura-petal w-3.5 h-3.5 text-pink-300/80" style="left: 38%; animation-duration: 11s; animation-delay: 2.5s;" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C9 6 5 9 5 14c0 3.8 3.1 7 7 7s7-3.2 7-7c0-5-4-8-7-12z"/>
+      </svg>
+      <svg class="sakura-petal w-5 h-5 text-violet-200/80" style="left: 62%; animation-duration: 10s; animation-delay: 1.2s;" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C9 6 5 9 5 14c0 3.8 3.1 7 7 7s7-3.2 7-7c0-5-4-8-7-12z"/>
+      </svg>
+      <svg class="sakura-petal w-3 h-3 text-rose-400/50" style="left: 88%; animation-duration: 8.5s; animation-delay: 3.5s;" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C9 6 5 9 5 14c0 3.8 3.1 7 7 7s7-3.2 7-7c0-5-4-8-7-12z"/>
+      </svg>
+    </div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+      <div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 lg:gap-6">
+
+        <!-- Левая колонка текста (5 колонок) -->
+        <div class="lg:col-span-5">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-50 border border-rose-200/80 text-xs font-medium text-rose-900 mb-3.5">
+            <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
+            <span>Pgames · Выкуп из Японии · Доставка по РФ</span>
+          </div>
+
+          <h1 class="font-editorial text-3xl sm:text-4xl lg:text-[38px] font-bold tracking-tight text-[#18181B] leading-[1.12]">
+            Оригинальные японские артбуки, аниме-сеттей и коллекционная манга
+          </h1>
+
+          <p class="mt-3 text-sm text-[#52525B] leading-relaxed">
+            Заказываем редкие и свежие издания на японском языке через проверенного посредника из японских магазинов. Цены указаны в рублях с учётом выкупа и упаковки в пупырчатую плёнку.
+          </p>
+
+          <!-- Бейджи условий + CTA на Telegram-канал -->
+          <div class="mt-4 flex flex-wrap items-center gap-2">
+            <a
+              id="heroTgLink"
+              href="https://t.me/your_manga_channel"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#18181B] hover:bg-rose-600 text-white text-xs sm:text-sm font-medium transition-colors shadow-xs"
+            >
+              <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+              </svg>
+              <span id="heroTgLabel">Наш ТГ-канал с мангой</span>
+            </a>
+
+            <div class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-rose-200/80 text-xs text-[#18181B]">
+              <span class="text-rose-500">✦</span>
+              <span>Пупырчатая плёнка</span>
+            </div>
+
+            <div class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-rose-200/80 text-xs text-[#18181B]">
+              <span class="text-rose-500">✦</span>
+              <span>Фотоотчёт по запросу</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Центральная витрина: Популярные аниме-девочки (4 колонки) -->
+        <div class="lg:col-span-4 flex items-center justify-center gap-3 sm:gap-4">
+
+          <!-- Героиня 1: Фрирен (Frieren) с гримуаром, радостно смотрит на пользователя -->
+          <div class="relative w-40 sm:w-44 h-52 rounded-2xl manga-halftone-violet border border-violet-200/80 bg-white/90 p-2 flex flex-col items-center justify-end shadow-xs animate-float group">
+            <div class="absolute -top-3 -left-2 bg-white border border-violet-300 rounded-xl px-2.5 py-0.5 shadow-2xs text-[10px] font-jp font-bold text-violet-700">
+              見て、新刊だよ! ✨
+            </div>
+
+            <svg viewBox="0 0 200 220" class="w-full h-full overflow-visible" aria-label="Фрирен с магической книгой радостно смотрит на вас">
+              <defs>
+                <linearGradient id="frierenHair" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#F8FAFC" />
+                  <stop offset="100%" stop-color="#CBD5E1" />
+                </linearGradient>
+                <linearGradient id="frierenEye" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#059669" />
+                  <stop offset="55%" stop-color="#34D399" />
+                  <stop offset="100%" stop-color="#A7F3D0" />
+                </linearGradient>
+              </defs>
+
+              <!-- Два фирменных хвостика Фрирен (слева и справа) -->
+              <path d="M56 66 C34 86, 26 125, 36 164 C46 150, 48 122, 58 95 Z" fill="url(#frierenHair)" stroke="#94A3B8" stroke-width="1"/>
+              <path d="M144 66 C166 86, 174 125, 164 164 C154 150, 152 122, 142 95 Z" fill="url(#frierenHair)" stroke="#94A3B8" stroke-width="1"/>
+              <!-- Резинки на хвостиках -->
+              <rect x="46" y="68" width="12" height="6" rx="2" transform="rotate(-25 46 68)" fill="#1E293B"/>
+              <rect x="142" y="64" width="12" height="6" rx="2" transform="rotate(25 142 64)" fill="#1E293B"/>
+
+              <!-- Задние серебристые волосы -->
+              <path d="M62 56 C62 28, 138 28, 138 56 L138 120 L62 120 Z" fill="url(#frierenHair)" />
+
+              <!-- Острые эльфийские ушки -->
+              <path d="M62 84 L38 78 L60 98 Z" fill="#FFF0E6" stroke="#E2B49A" stroke-width="1.2"/>
+              <path d="M138 84 L162 78 L140 98 Z" fill="#FFF0E6" stroke="#E2B49A" stroke-width="1.2"/>
+              <!-- Золотые серёжки с красными камнями -->
+              <circle cx="56" cy="98" r="2.5" fill="#F59E0B"/>
+              <path d="M56 101 L53 107 L59 107 Z" fill="#EF4444"/>
+              <circle cx="144" cy="98" r="2.5" fill="#F59E0B"/>
+              <path d="M144 101 L141 107 L147 107 Z" fill="#EF4444"/>
+
+              <!-- Накидка и костюм Фрирен (белый с золотой окантовкой) -->
+              <path d="M64 136 C76 128, 124 128, 136 136 L152 198 L48 198 Z" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1.5"/>
+              <!-- Воротник-стойка с золотой каймой -->
+              <path d="M74 132 L100 156 L126 132 L134 142 L100 170 L66 142 Z" fill="#F8FAFC" stroke="#F59E0B" stroke-width="2"/>
+              <path d="M84 142 L100 185 L116 142 Z" fill="#1E293B"/>
+
+              <!-- Шея -->
+              <rect x="92" y="118" width="16" height="18" rx="6" fill="#FFE8DC"/>
+
+              <!-- Лицо -->
+              <path d="M66 76 C66 48, 134 48, 134 76 C134 106, 118 124, 100 124 C82 124, 66 106, 66 76 Z" fill="#FFF2EA"/>
+
+              <!-- Нежный румянец -->
+              <ellipse cx="77" cy="98" rx="6.5" ry="3.2" fill="#FDA4AF" opacity="0.6"/>
+              <ellipse cx="123" cy="98" rx="6.5" ry="3.2" fill="#FDA4AF" opacity="0.6"/>
+
+              <!-- Радостные изумрудные глаза Фрирен (смотрят прямо на пользователя) -->
+              <path d="M74 82 Q83 76 91 82" fill="none" stroke="#475569" stroke-width="2.4" stroke-linecap="round"/>
+              <ellipse cx="83" cy="88" rx="6.2" ry="7.4" fill="url(#frierenEye)"/>
+              <ellipse cx="83" cy="88.5" rx="3" ry="3.8" fill="#064E3B"/>
+              <circle cx="81" cy="85" r="2.3" fill="#FFFFFF"/>
+              <circle cx="85.5" cy="91" r="1.1" fill="#FFFFFF"/>
+
+              <path d="M109 82 Q117 76 126 82" fill="none" stroke="#475569" stroke-width="2.4" stroke-linecap="round"/>
+              <ellipse cx="117" cy="88" rx="6.2" ry="7.4" fill="url(#frierenEye)"/>
+              <ellipse cx="117" cy="88.5" rx="3" ry="3.8" fill="#064E3B"/>
+              <circle cx="115" cy="85" r="2.3" fill="#FFFFFF"/>
+              <circle cx="119.5" cy="91" r="1.1" fill="#FFFFFF"/>
+
+              <!-- Бровки и счастливая улыбка (котёнок :3) -->
+              <path d="M76 72 Q83 69 89 72" fill="none" stroke="#64748B" stroke-width="1.4" stroke-linecap="round"/>
+              <path d="M111 72 Q117 69 124 72" fill="none" stroke="#64748B" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="100" cy="96" r="1" fill="#D97757"/>
+              <path d="M93 103 Q96.5 108 100 104 Q103.5 108 107 103" fill="none" stroke="#BE123C" stroke-width="1.8" stroke-linecap="round"/>
+
+              <!-- Серебристая чёлка -->
+              <path d="M62 74 C62 36, 138 36, 138 74 C132 60, 125 56, 118 74 C112 56, 106 54, 100 76 C94 54, 88 56, 82 74 C75 56, 68 60, 62 74 Z" fill="url(#frierenHair)" stroke="#94A3B8" stroke-width="0.8"/>
+
+              <!-- Гримуар в руках -->
+              <g transform="translate(65, 155) rotate(-3)">
+                <rect x="0" y="0" width="70" height="46" rx="4" fill="#5B21B6" stroke="#F59E0B" stroke-width="1.8"/>
+                <rect x="10" y="7" width="50" height="32" rx="2" fill="none" stroke="#FCD34D" stroke-width="1"/>
+                <circle cx="35" cy="23" r="9" fill="none" stroke="#FCD34D" stroke-width="1.3"/>
+                <text x="35" y="26" text-anchor="middle" font-size="8" font-weight="bold" fill="#FEF3C7">✦</text>
+              </g>
+              <circle cx="66" cy="178" r="6" fill="#FFF2EA" stroke="#E2B49A" stroke-width="1"/>
+              <circle cx="134" cy="175" r="6" fill="#FFF2EA" stroke="#E2B49A" stroke-width="1"/>
+            </svg>
+
+            <span class="text-[10px] font-semibold text-violet-900 mt-0.5">Фрирен · Любительница книг</span>
+          </div>
+
+          <!-- Героиня 2: Марин Китагава / Рему (розово-золотистая, жизнерадостно подмигивает и показывает артбук) -->
+          <div class="relative w-40 sm:w-44 h-52 rounded-2xl manga-halftone border border-rose-200/80 bg-white/90 p-2 flex flex-col items-center justify-end shadow-xs animate-float-delay group">
+            <div class="absolute -top-3 -right-2 bg-white border border-rose-300 rounded-xl px-2.5 py-0.5 shadow-2xs text-[10px] font-jp font-bold text-rose-600">
+              すっごく素敵! ♥
+            </div>
+
+            <svg viewBox="0 0 200 220" class="w-full h-full overflow-visible" aria-label="Аниме-героиня радостно улыбается и держит артбук">
+              <defs>
+                <linearGradient id="marinHair" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#FDE047" />
+                  <stop offset="65%" stop-color="#FACC15" />
+                  <stop offset="100%" stop-color="#FB7185" />
+                </linearGradient>
+                <linearGradient id="marinEye" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#E11D48" />
+                  <stop offset="60%" stop-color="#FB7185" />
+                  <stop offset="100%" stop-color="#FECDD3" />
+                </linearGradient>
+              </defs>
+
+              <!-- Длинные золотисто-розовые волосы -->
+              <path d="M52 66 C36 108, 38 158, 52 192 C66 176, 65 140, 68 114 Z" fill="url(#marinHair)"/>
+              <path d="M148 66 C164 108, 162 158, 148 192 C134 176, 135 140, 132 114 Z" fill="url(#marinHair)"/>
+              <path d="M58 58 C58 26, 142 26, 142 58 L142 155 L58 155 Z" fill="url(#marinHair)"/>
+
+              <!-- Заколки-звёздочки -->
+              <polygon points="62,56 64,61 69,61 65,64 66,69 62,66 58,69 59,64 55,61 60,61" fill="#F43F5E"/>
+              <polygon points="138,56 140,61 145,61 141,64 142,69 138,66 134,69 135,64 131,61 136,61" fill="#F43F5E"/>
+
+              <!-- Школьная рубашка и галстук -->
+              <path d="M64 138 C76 130, 124 130, 136 138 L148 198 L52 198 Z" fill="#FFFFFF" stroke="#E4E4E7" stroke-width="1.5"/>
+              <path d="M78 134 L100 156 L122 134" fill="none" stroke="#CBD5E1" stroke-width="1.5"/>
+              <!-- Полосатый галстук -->
+              <polygon points="95,152 105,152 109,188 100,195 91,188" fill="#1E293B"/>
+              <line x1="94" y1="162" x2="106" y2="166" stroke="#F43F5E" stroke-width="2.5"/>
+              <line x1="93" y1="174" x2="107" y2="178" stroke="#F43F5E" stroke-width="2.5"/>
+
+              <!-- Чокер на шее -->
+              <rect x="92" y="118" width="16" height="18" rx="6" fill="#FFE8DC"/>
+              <rect x="91" y="124" width="18" height="4" rx="1.5" fill="#18181B"/>
+              <circle cx="100" cy="126" r="1.8" fill="#F43F5E"/>
+
+              <!-- Лицо -->
+              <path d="M66 76 C66 48, 134 48, 134 76 C134 106, 118 124, 100 124 C82 124, 66 106, 66 76 Z" fill="#FFF0E6"/>
+
+              <!-- Яркий счастливый румянец -->
+              <ellipse cx="76" cy="97" rx="7" ry="3.6" fill="#FDA4AF" opacity="0.75"/>
+              <ellipse cx="124" cy="97" rx="7" ry="3.6" fill="#FDA4AF" opacity="0.75"/>
+
+              <!-- Левый глаз широко и радостно смотрит на пользователя -->
+              <path d="M73 81 Q82 73 91 81" fill="none" stroke="#18181B" stroke-width="2.8" stroke-linecap="round"/>
+              <ellipse cx="82" cy="87" rx="6.5" ry="8" fill="url(#marinEye)"/>
+              <ellipse cx="82" cy="88" rx="3.2" ry="4.2" fill="#881337"/>
+              <circle cx="79.5" cy="84" r="2.5" fill="#FFFFFF"/>
+              <circle cx="85" cy="91" r="1.2" fill="#FFFFFF"/>
+
+              <!-- Правый глаз — игривое радостное подмигивание (^ _ <) -->
+              <path d="M109 86 Q117 77 126 86" fill="none" stroke="#18181B" stroke-width="2.8" stroke-linecap="round"/>
+              <path d="M123 82 L128 79" stroke="#18181B" stroke-width="1.8" stroke-linecap="round"/>
+
+              <!-- Бровки и широкая открытая улыбка -->
+              <path d="M75 71 Q82 67 89 71" fill="none" stroke="#B45309" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M111 71 Q118 67 125 71" fill="none" stroke="#B45309" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M92 102 Q100 114 108 102 Z" fill="#FB7185" stroke="#BE123C" stroke-width="1.4" stroke-linejoin="round"/>
+
+              <!-- Чёлка -->
+              <path d="M62 74 C62 34, 138 34, 138 74 C132 58, 124 54, 118 73 C112 56, 105 53, 99 75 C93 53, 86 56, 80 73 C74 54, 67 58, 62 74 Z" fill="url(#marinHair)"/>
+              <!-- Боковые пряди -->
+              <path d="M64 70 C59 98, 63 122, 71 138 C68 116, 68 94, 70 76 Z" fill="#FACC15"/>
+              <path d="M136 70 C141 98, 137 122, 129 138 C132 116, 132 94, 130 76 Z" fill="#FACC15"/>
+
+              <!-- Яркий артбук в руках -->
+              <g transform="translate(65, 155) rotate(3)">
+                <rect x="0" y="0" width="70" height="46" rx="4" fill="#F43F5E" stroke="#18181B" stroke-width="1.5"/>
+                <rect x="12" y="7" width="46" height="22" rx="2" fill="#FAF9F6"/>
+                <text x="35" y="21" text-anchor="middle" font-size="8.5" font-weight="bold" fill="#18181B">PGAMES</text>
+                <text x="35" y="39" text-anchor="middle" font-size="7" fill="#FFE4E6">イラスト集</text>
+              </g>
+              <circle cx="66" cy="175" r="6" fill="#FFF0E6" stroke="#E5B8A5" stroke-width="1"/>
+              <circle cx="134" cy="178" r="6" fill="#FFF0E6" stroke="#E5B8A5" stroke-width="1"/>
+            </svg>
+
+            <span class="text-[10px] font-semibold text-rose-900 mt-0.5">Марин · Ценительница артбуков</span>
+          </div>
+
+        </div>
+
+        <!-- Правая карточка: Редакционная справка о схеме заказа (3 колонки) -->
+        <div class="lg:col-span-3 flex items-stretch gap-3 bg-white border border-rose-200/80 rounded-2xl p-4 shadow-2xs">
+          <div class="writing-vertical font-serifjp text-[11px] tracking-[0.24em] text-rose-600 border-l border-[#E4E4E7] pl-2.5 select-none flex items-center justify-center">
+            日本書籍仲介便
+          </div>
+          <div class="flex flex-col justify-between text-xs space-y-2.5">
+            <div>
+              <p class="font-semibold text-[#18181B] text-sm flex items-center gap-1.5">
+                <span>Как проходит заказ</span>
+                <span class="text-rose-500 text-xs">✦</span>
+              </p>
+              <ul class="text-[#52525B] mt-2 space-y-1.5 leading-relaxed">
+                <li class="flex items-start gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mt-1.5 shrink-0"></span>
+                  <span><strong class="text-[#18181B] font-medium">В наличии (РФ):</strong> отправка СДЭК, Почтой России или Яндексом за 1–2 дня.</span>
+                </li>
+                <li class="flex items-start gap-1.5">
+                  <span class="w-1.5 h-1.5 rounded-full bg-amber-500 mt-1.5 shrink-0"></span>
+                  <span><strong class="text-[#18181B] font-medium">Под заказ:</strong> выкуп через посредника в Японии, срок доставки 8–12 недель.</span>
+                </li>
+              </ul>
+            </div>
+            <div class="pt-2 border-t border-[#E4E4E7] flex items-center justify-between text-[11px] text-[#52525B]">
+              <span>Анонсы и привозы:</span>
+              <a id="cardTgLink" href="https://t.me/your_manga_channel" target="_blank" rel="noopener noreferrer" class="font-semibold text-rose-600 hover:underline">
+                Telegram →
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ОСНОВНОЙ КОНТЕНТ: ФИЛЬТРЫ И КАТАЛОГ ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-9">
+
+    <!-- Панель фильтров и сортировки -->
+    <section aria-label="Фильтры и сортировка" class="space-y-4 mb-7">
+      <!-- Ряд 1: Категории (включая Аниме!) -->
+      <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1" id="categoryFilters">
+        <!-- Рендерится из JS -->
+      </div>
+
+      <!-- Ряд 2: Наличие + Сортировка + Счётчик -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pt-1">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar" id="availabilityFilters">
+          <!-- Рендерится из JS -->
+        </div>
+
+        <div class="flex items-center justify-between md:justify-end gap-3">
+          <span id="resultsCounter" class="text-xs sm:text-sm text-[#52525B]">
+            Найдено: 11 изданий
+          </span>
+
+          <div class="relative">
+            <label for="sortSelect" class="sr-only">Сортировка</label>
+            <select
+              id="sortSelect"
+              class="appearance-none bg-white border border-[#E4E4E7] hover:border-[#18181B] rounded-xl pl-3.5 pr-9 py-2 text-xs sm:text-sm font-medium text-[#18181B] focus:outline-none focus:border-rose-500 cursor-pointer transition-colors"
+            >
+              <option value="default">По умолчанию</option>
+              <option value="price-asc">Сначала дешевле</option>
+              <option value="price-desc">Сначала дороже</option>
+              <option value="newest">Новинки</option>
+            </select>
+            <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-[#52525B]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+              </svg>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Сетка каталога -->
+    <section id="catalogGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+      <!-- Карточки книг рендерятся динамически -->
+    </section>
+
+    <!-- Пустое состояние (с радостной аниме-чиби девочкой) -->
+    <div id="emptyState" class="hidden bg-white border border-rose-200/80 rounded-2xl p-10 sm:p-14 text-center my-4">
+      <div class="w-20 h-20 rounded-2xl bg-rose-50 border border-rose-200 mx-auto flex items-center justify-center mb-3">
+        <svg viewBox="0 0 100 100" class="w-16 h-16" aria-hidden="true">
+          <circle cx="50" cy="54" r="24" fill="#FFF0E6"/>
+          <path d="M24 52 C24 26, 76 26, 76 52 C70 40, 62 38, 56 50 C50 38, 44 38, 38 50 C32 38, 28 40, 24 52 Z" fill="#F43F5E"/>
+          <circle cx="40" cy="54" r="3.5" fill="#18181B"/>
+          <circle cx="60" cy="54" r="3.5" fill="#18181B"/>
+          <circle cx="39" cy="53" r="1.2" fill="#FFFFFF"/>
+          <circle cx="59" cy="53" r="1.2" fill="#FFFFFF"/>
+          <path d="M46 64 Q50 68 54 64" fill="none" stroke="#BE123C" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="text-base sm:text-lg font-semibold text-[#18181B]">По вашему запросу изданий не найдено</h3>
+      <p class="text-sm text-[#52525B] mt-1 max-w-md mx-auto">
+        Попробуйте изменить поисковый запрос, выбрать другую категорию или сбросить фильтры наличия.
+      </p>
+      <button
+        id="resetAllFiltersBtn"
+        type="button"
+        class="mt-5 inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[#18181B] text-white text-sm font-medium hover:bg-rose-600 transition-colors"
+      >
+        Сбросить все фильтры
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ==================== ПОДВАЛ (FOOTER) ==================== -->
+  <footer class="border-t border-[#E4E4E7] bg-white mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 text-xs text-[#52525B]">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="w-6 h-6 rounded-md bg-gradient-to-br from-[#D93829] to-rose-600 text-white font-bold flex items-center justify-center text-[10px]">PG</span>
+        <span class="font-semibold text-[#18181B]">Pgames · Артбуки, аниме и манга из Японии</span>
+        <span>— Выкуп через посредника и доставка по РФ</span>
+      </div>
+      <div class="flex flex-wrap items-center gap-4">
+        <a
+          id="footerTgLink"
+          href="https://t.me/your_manga_channel"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 font-medium text-[#18181B] hover:text-rose-600 transition-colors"
+        >
+          <svg class="w-3.5 h-3.5 text-[#229ED9]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+          </svg>
+          <span id="footerTgLabel">Наш ТГ-канал с мангой</span>
+        </a>
+        <span>Доставка: СДЭК, Почта России, Яндекс</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== МОДАЛЬНОЕ ОКНО КАРТОЧКИ КНИГИ ==================== -->
+  <div
+    id="bookModal"
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/45 backdrop-blur-[2px] p-4 sm:p-6 flex items-center justify-center"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modalBookTitle"
+  >
+    <div class="relative w-full max-w-4xl bg-white border border-[#E4E4E7] rounded-2xl shadow-2xl overflow-hidden animate-slide-up my-auto">
+      <button
+        id="closeBookModalBtn"
+        type="button"
+        aria-label="Закрыть окно"
+        class="absolute top-4 right-4 z-10 w-9 h-9 rounded-xl bg-[#FAF9F6] hover:bg-rose-50 border border-[#E4E4E7] hover:border-rose-300 flex items-center justify-center text-zinc-600 hover:text-rose-600 transition-colors"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <div id="bookModalBody" class="grid grid-cols-1 md:grid-cols-12">
+        <!-- Контент подставляется из JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== ПАНЕЛЬ УПРАВЛЕНИЯ КАТАЛОГОМ (ADMIN MODAL) ==================== -->
+  <div
+    id="adminModal"
+    class="hidden fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-[2px] p-3 sm:p-6 flex items-center justify-center"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="adminModalTitle"
+  >
+    <div class="relative w-full max-w-5xl bg-white border border-[#E4E4E7] rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[92vh] animate-slide-up">
+
+      <!-- Шапка панели управления -->
+      <div class="px-5 sm:px-6 py-4 bg-[#FAF9F6] border-b border-[#E4E4E7] flex items-center justify-between gap-4 shrink-0">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-rose-500"></span>
+            <h2 id="adminModalTitle" class="text-base sm:text-lg font-bold text-[#18181B]">
+              Управление каталогом Pgames и ценами
+            </h2>
+          </div>
+          <p class="text-xs text-[#52525B] mt-0.5">
+            Изменения сохраняются автоматически в браузере · Можно экспортировать в JSON или скопировать код
+          </p>
+        </div>
+
+        <button
+          id="closeAdminModalBtn"
+          type="button"
+          aria-label="Закрыть панель управления"
+          class="w-9 h-9 rounded-xl bg-white border border-[#E4E4E7] hover:border-[#18181B] flex items-center justify-center text-zinc-600 hover:text-[#18181B] transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Вкладки панели управления -->
+      <div class="px-5 sm:px-6 border-b border-[#E4E4E7] bg-white flex items-center gap-2 overflow-x-auto no-scrollbar shrink-0">
+        <button
+          type="button"
+          data-admin-tab="books"
+          class="admin-tab-btn py-3 px-3 text-xs sm:text-sm font-semibold border-b-2 border-rose-500 text-[#18181B] whitespace-nowrap"
+        >
+          Список книг и быстрые цены (<span id="adminBooksCount">11</span>)
+        </button>
+        <button
+          type="button"
+          data-admin-tab="form"
+          id="adminFormTabBtn"
+          class="admin-tab-btn py-3 px-3 text-xs sm:text-sm font-medium border-b-2 border-transparent text-[#52525B] hover:text-[#18181B] whitespace-nowrap"
+        >
+          + Добавить книгу
+        </button>
+        <button
+          type="button"
+          data-admin-tab="settings"
+          class="admin-tab-btn py-3 px-3 text-xs sm:text-sm font-medium border-b-2 border-transparent text-[#52525B] hover:text-[#18181B] whitespace-nowrap"
+        >
+          ТГ-канал и резервная копия
+        </button>
+      </div>
+
+      <!-- Контент вкладок панели управления -->
+      <div id="adminModalContent" class="flex-1 overflow-y-auto p-5 sm:p-6">
+        <!-- Рендерится динамически из JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== БОКОВАЯ ПАНЕЛЬ КОРЗИНЫ И ОФОРМЛЕНИЯ ЗАКАЗА ==================== -->
+  <div
+    id="cartDrawerOverlay"
+    class="hidden fixed inset-0 z-50 bg-black/45 backdrop-blur-[2px] flex justify-end"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cartDrawerTitle"
+  >
+    <div id="cartDrawerPanel" class="w-full max-w-md bg-white h-full shadow-2xl border-l border-[#E4E4E7] flex flex-col justify-between overflow-hidden animate-fade-in">
+
+      <!-- Шапка корзины -->
+      <div class="px-5 py-4 border-b border-[#E4E4E7] flex items-center justify-between bg-[#FAF9F6]">
+        <div>
+          <h2 id="cartDrawerTitle" class="text-base sm:text-lg font-bold text-[#18181B]">Ваш заказ · Pgames</h2>
+          <p class="text-xs text-[#52525B] font-jp">ご注文リスト · Оформление заявки</p>
+        </div>
+        <button
+          id="closeCartBtn"
+          type="button"
+          aria-label="Закрыть корзину"
+          class="w-9 h-9 rounded-xl bg-white border border-[#E4E4E7] hover:border-[#18181B] flex items-center justify-center text-zinc-600 hover:text-[#18181B] transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Тело корзины -->
+      <div id="cartDrawerContent" class="flex-1 overflow-y-auto p-5">
+        <!-- Рендерится из JS -->
+      </div>
+
+      <!-- Футер корзины -->
+      <div id="cartDrawerFooter" class="border-t border-[#E4E4E7] p-5 bg-[#FAF9F6]">
+        <!-- Рендерится из JS -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==================== ВСПЛЫВАЮЩЕЕ УВЕДОМЛЕНИЕ (TOAST) ==================== -->
+  <div
+    id="toastContainer"
+    class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-xs w-full px-4 sm:px-0"
+  ></div>
+
+  <!-- ==================== JAVASCRIPT ЛОГИКА ==================== -->
+  <script>
+    // Ключи для сохранения в localStorage
+    const STORAGE_BOOKS_KEY = 'pgames_catalog_books_v1';
+    const STORAGE_SETTINGS_KEY = 'pgames_catalog_settings_v1';
+
+    // Настройки сайта по умолчанию (ссылка на Telegram-канал с мангой)
+    const DEFAULT_SETTINGS = {
+      tgUrl: 'https://t.me/your_manga_channel',
+      tgLabel: 'Наш ТГ-канал с мангой'
+    };
+
+    // Категории каталога (включая Аниме!)
+    const CATEGORIES = [
+      'Все',
+      'Аниме',
+      'Манга',
+      'Иллюстрации',
+      'Геймдев',
+      'Дизайн и типографика'
+    ];
+
+    // Варианты фильтра наличия
+    const AVAILABILITY_FILTERS = [
+      { id: 'all', label: 'Все' },
+      { id: 'in_stock_rf', label: 'В наличии (РФ)' },
+      { id: 'order_jp', label: 'Под заказ (через посредника)' },
+      { id: 'preorder', label: 'Предзаказ' },
+      { id: 'out_of_stock', label: 'Нет в наличии' }
+    ];
+
+    // Метаданные 4 статусов наличия
+    const STATUS_META = {
+      in_stock_rf: {
+        label: 'В наличии (РФ)',
+        badgeClass: 'bg-emerald-50 text-emerald-800 border-emerald-200',
+        dotClass: 'bg-emerald-500',
+        delivery: 'В наличии в РФ · Отправка СДЭК, Почтой России или Яндексом за 1–2 дня',
+        ctaText: 'В корзину',
+        available: true
+      },
+      order_jp: {
+        label: 'Под заказ (через посредника)',
+        badgeClass: 'bg-amber-50 text-amber-800 border-amber-200',
+        dotClass: 'bg-amber-500',
+        delivery: 'Выкуп через посредника в Японии · Доставка в РФ 8–12 недель',
+        ctaText: 'Заказать',
+        available: true
+      },
+      preorder: {
+        label: 'Предзаказ',
+        badgeClass: 'bg-indigo-50 text-indigo-800 border-indigo-200',
+        dotClass: 'bg-indigo-500',
+        delivery: 'Предзаказ тиража через посредника · Выкуп в день японского релиза',
+        ctaText: 'Предзаказ',
+        available: true
+      },
+      out_of_stock: {
+        label: 'Нет в наличии',
+        badgeClass: 'bg-zinc-100 text-zinc-600 border-zinc-200',
+        dotClass: 'bg-zinc-400',
+        delivery: 'Тираж временно распродан · Следите за повторным поиском в нашем Telegram-канале',
+        ctaText: 'Нет в наличии',
+        available: false
+      }
+    };
+
+    // Базовый каталог (11 изданий с акцентом на Аниме, Мангу, Иллюстрации, Геймдев и Дизайн)
+    const DEFAULT_BOOKS = [
+      {
+        id: 'violet-evergarden-design-works',
+        titleRu: 'Violet Evergarden: Официальный сборник материалов и сеттей',
+        titleJp: 'ヴァイオレット・エヴァーガーデン 公式設定集',
+        author: 'Kyoto Animation (KyoAni)',
+        publisher: 'Kyoto Animation',
+        category: 'Аниме',
+        status: 'order_jp',
+        priceRub: 6890,
+        year: 2021,
+        pages: 212,
+        format: 'A4 (297 × 210 мм), мягкий переплёт, плотная мелованная бумага',
+        isNew: false,
+        imageUrl: '',
+        description: 'Официальный том производственных материалов от студии Kyoto Animation: детальные дизайн-листы персонажей, костюмов, пишущих машинок, интерьеров почтовой компании и фоновых эскизов.',
+        cover: {
+          bg: '#1E3246',
+          accent: '#D4AF37',
+          text: '#FAF9F6',
+          obiBg: '#FAF9F6',
+          obiText: '#1E3246',
+          jpVertical: 'ヴァイオレット設定集',
+          code: 'KYOANI · WORKS',
+          motif: 'crest'
+        }
+      },
+      {
+        id: 'makoto-shinkai-visual-archive',
+        titleRu: 'Макото Синкай: Судзумэ и Твоё имя — Визуальный архив',
+        titleJp: '新海誠監督作品 すずめの戸締まり 美術画集',
+        author: 'Макото Синкай / CoMix Wave Films',
+        publisher: 'KADOKAWA',
+        category: 'Аниме',
+        status: 'in_stock_rf',
+        priceRub: 4690,
+        year: 2023,
+        pages: 256,
+        format: 'A4 альбомный, суперобложка с тиснением',
+        isNew: true,
+        imageUrl: '',
+        description: 'Альбом фоновой живописи и световых сценариев из полнометражных фильмов Макото Синкая. Более 220 панорамных фонов прибрежных городов, руин и неба с комментариями художников.',
+        cover: {
+          bg: '#1A365D',
+          accent: '#E07A5F',
+          text: '#FAF9F6',
+          obiBg: '#D93829',
+          obiText: '#FFFFFF',
+          jpVertical: 'すずめの戸締まり',
+          code: 'COMIX WAVE',
+          motif: 'door'
+        }
+      },
+      {
+        id: 'evangelion-illustrations-2007-2017',
+        titleRu: 'Evangelion Illustrations 2007–2017 (Сборник иллюстраций)',
+        titleJp: 'エヴァンゲリオン イラスト集 2007-2017',
+        author: 'Studio Khara / Такэси Хонда / Махиро Маэда',
+        publisher: 'GroundWorks',
+        category: 'Аниме',
+        status: 'order_jp',
+        priceRub: 5490,
+        year: 2018,
+        pages: 176,
+        format: 'B4 увеличенный формат (364 × 257 мм)',
+        isNew: false,
+        imageUrl: '',
+        description: 'Крупноформатный артбук, объединяющий более 600 цветных иллюстраций, постеров, журнальных обложек и промо-артов эпохи Rebuild of Evangelion.',
+        cover: {
+          bg: '#18181B',
+          accent: '#D93829',
+          text: '#FAF9F6',
+          obiBg: '#5B21B6',
+          obiText: '#FFFFFF',
+          jpVertical: 'エヴァイラスト集',
+          code: 'KHARA · ARCHIVE',
+          motif: 'emblem'
+        }
+      },
+      {
+        id: 'chainsaw-man-animation-artbook',
+        titleRu: 'Chainsaw Man: Официальный анимационный артбук MAPPA',
+        titleJp: 'チェンソーマン ANIMATION ARTBOOK',
+        author: 'Студия MAPPA / Тацуки Фудзимото',
+        publisher: 'MAPPA',
+        category: 'Аниме',
+        status: 'in_stock_rf',
+        priceRub: 4990,
+        year: 2023,
+        pages: 240,
+        format: 'A4, суперобложка, цветные и ч/б ключевые кадры',
+        isNew: true,
+        imageUrl: '',
+        description: 'Официальный сборник ключевой анимации (genga), раскадровок и цветовых решений первого сезона «Человека-бензопилы» от студии MAPPA.',
+        cover: {
+          bg: '#231F20',
+          accent: '#F59E0B',
+          text: '#FAF9F6',
+          obiBg: '#D93829',
+          obiText: '#FFFFFF',
+          jpVertical: 'チェンソーマン原画',
+          code: 'MAPPA · TOKYO',
+          motif: 'frame'
+        }
+      },
+      {
+        id: 'studio-ghibli-layout-designs',
+        titleRu: 'Studio Ghibli Layout Designs — Композиция и раскадровки',
+        titleJp: 'スタジオジブリ・レイアウト展 図録',
+        author: 'Хаяо Миядзаки / Исао Такахата / Studio Ghibli',
+        publisher: 'Studio Ghibli',
+        category: 'Аниме',
+        status: 'order_jp',
+        priceRub: 7490,
+        year: 2022,
+        pages: 448,
+        format: '295 × 225 мм, плотный переплёт, более 1300 лэйаутов',
+        isNew: false,
+        imageUrl: '',
+        description: 'Монументальный выставочный каталог, раскрывающий секреты построения кадра в шедеврах Studio Ghibli: от «Навсикаи» и «Тоторо» до «Унесённых призраками».',
+        cover: {
+          bg: '#EAE6DF',
+          accent: '#3B5249',
+          text: '#18181B',
+          obiBg: '#3B5249',
+          obiText: '#FAF9F6',
+          jpVertical: 'ジブリ・レイアウト',
+          code: 'STUDIO GHIBLI',
+          motif: 'leaf'
+        }
+      },
+      {
+        id: 'vagabond-water-inoue',
+        titleRu: 'Vagabond: WATER — Артбук Такэхико Иноуэ',
+        titleJp: 'バガボンド画集 WATER 井上雄彦',
+        author: 'Такэхико Иноуэ (Takehiko Inoue)',
+        publisher: 'Kodansha',
+        category: 'Манга',
+        status: 'order_jp',
+        priceRub: 6290,
+        year: 2021,
+        pages: 164,
+        format: '297 × 225 мм, твёрдый переплёт с тканевым корешком',
+        isNew: false,
+        imageUrl: '',
+        description: 'Знаменитый цветной артбук по манге «Бродяга» (Vagabond). Акварельные портреты Миямото Мусаси, пейзажи феодальной Японии и каллиграфия тушью.',
+        cover: {
+          bg: '#F4F1EA',
+          accent: '#2B5B84',
+          text: '#18181B',
+          obiBg: '#18181B',
+          obiText: '#FAF9F6',
+          jpVertical: 'バガボンド画集水',
+          code: 'KODANSHA · ART',
+          motif: 'sphere'
+        }
+      },
+      {
+        id: 'berserk-official-exhibition-artwork',
+        titleRu: 'The Artwork of Berserk — Официальный каталог выставки',
+        titleJp: '大ベルセルク展 公式イラストレーションブック',
+        author: 'Кэнтаро Миура (Kentaro Miura)',
+        publisher: 'Hakusensha',
+        category: 'Манга',
+        status: 'preorder',
+        priceRub: 7990,
+        year: 2026,
+        pages: 224,
+        format: 'A4, твёрдый переплёт, суперобложка с металлизированным тиснением',
+        isNew: true,
+        imageUrl: '',
+        description: 'Официальный каталог великой выставки «Берсерк» в Токио: высокодетализированные сканы оригинальных страниц тушью, цветные обложки и интервью с Кэнтаро Миурой.',
+        cover: {
+          bg: '#161618',
+          accent: '#D93829',
+          text: '#FAF9F6',
+          obiBg: '#D93829',
+          obiText: '#FFFFFF',
+          jpVertical: '大ベルセルク展画集',
+          code: 'HAKUSENSHA',
+          motif: 'ring'
+        }
+      },
+      {
+        id: 'yoshitaka-amano-the-sky',
+        titleRu: 'Ёситака Амано: Небо (THE SKY) — Коллекционное издание',
+        titleJp: '天野喜孝全版画集 / THE SKY',
+        author: 'Ёситака Амано (Yoshitaka Amano)',
+        publisher: 'Fukkan.com',
+        category: 'Иллюстрации',
+        status: 'order_jp',
+        priceRub: 8590,
+        year: 2024,
+        pages: 312,
+        format: 'B4 (364 × 257 мм), подарочный футляр',
+        isNew: false,
+        imageUrl: '',
+        description: 'Переиздание культовой монографии Ёситаки Амано с воздушными акварельными и тушевыми иллюстрациями, эскизами персонажей и авторской графикой.',
+        cover: {
+          bg: '#F2EFE9',
+          accent: '#D93829',
+          text: '#18181B',
+          obiBg: '#18181B',
+          obiText: '#FAF9F6',
+          jpVertical: '天野喜孝画集',
+          code: 'FUKKAN · TOKYO',
+          motif: 'crest'
+        }
+      },
+      {
+        id: 'elden-ring-art-1',
+        titleRu: 'Elden Ring: Официальный артбук. Том I',
+        titleJp: 'ELDEN RING OFFICIAL ART BOOK Volume I',
+        author: 'FromSoftware',
+        publisher: 'KADOKAWA Game Linkage',
+        category: 'Геймдев',
+        status: 'in_stock_rf',
+        priceRub: 5290,
+        year: 2022,
+        pages: 432,
+        format: 'A4 (297 × 210 мм), твёрдый переплёт в суперобложке',
+        isNew: false,
+        imageUrl: '',
+        description: 'Фундаментальный первый том концепт-артов Междуземья: локации, архитектура, доспехи, оружие и эскизы персонажей с комментариями арт-отдела FromSoftware.',
+        cover: {
+          bg: '#1C1B18',
+          accent: '#C69C53',
+          text: '#F5EFE6',
+          obiBg: '#8B261D',
+          obiText: '#FAF9F6',
+          jpVertical: 'エルデンリング画集',
+          code: 'KADOKAWA · VOL.I',
+          motif: 'ring'
+        }
+      },
+      {
+        id: 'nier-automata-world-guide',
+        titleRu: 'NieR:Automata — Мировой гид и арт-архив',
+        titleJp: 'ニーア オートマタ ワールドガイド＆美術記録集',
+        author: 'Ёко Таро / PlatinumGames / Акихико Ёсида',
+        publisher: 'Square Enix',
+        category: 'Геймдев',
+        status: 'out_of_stock',
+        priceRub: 4890,
+        year: 2023,
+        pages: 304,
+        format: 'B5, твёрдый переплёт, суперобложка',
+        isNew: false,
+        imageUrl: '',
+        description: 'Подарочное издание с иллюстрациями персонажей Акихико Ёсиды, концептами локаций и эксклюзивными рассказами Ёко Таро.',
+        cover: {
+          bg: '#272623',
+          accent: '#B5AC9A',
+          text: '#F2EFE9',
+          obiBg: '#DCD7CC',
+          obiText: '#18181B',
+          jpVertical: 'ニーアオートマタ',
+          code: 'SQUARE ENIX',
+          motif: 'emblem'
+        }
+      },
+      {
+        id: 'idea-magazine-406',
+        titleRu: 'IDEA №406 — Японская типографика и книжный дизайн',
+        titleJp: 'アイデア No.406 日本のタイポグラフィとエディトリアル',
+        author: 'Редакция IDEA',
+        publisher: 'Seibundo Shinkosha',
+        category: 'Дизайн и типографика',
+        status: 'in_stock_rf',
+        priceRub: 3990,
+        year: 2025,
+        pages: 196,
+        format: '297 × 225 мм, швейцарский переплёт',
+        isNew: true,
+        imageUrl: '',
+        description: 'Выпуск легендарного японского журнала о графическом дизайне. Подробный разбор книжных макетов, шрифтовых систем кандзи и выставочных плакатов.',
+        cover: {
+          bg: '#ECEAE4',
+          accent: '#D93829',
+          text: '#18181B',
+          obiBg: '#D93829',
+          obiText: '#FFFFFF',
+          jpVertical: 'アイデア四〇六',
+          code: 'IDEA · 406',
+          motif: 'grid'
+        }
+      }
+    ];
+
+    // Глобальное состояние приложения
+    const state = {
+      books: [],
+      settings: { ...DEFAULT_SETTINGS },
+      category: 'Все',
+      availability: 'all',
+      sortBy: 'default',
+      searchQuery: '',
+      cart: [], // [{ bookId, qty }]
+      checkoutStep: 'cart', // 'cart' | 'form' | 'confirmed'
+      lastOrder: null,
+      // Состояние панели управления каталогом
+      adminTab: 'books', // 'books' | 'form' | 'settings'
+      adminSearch: '',
+      editingBookId: null
+    };
+
+    // ==================== ЗАГРУЗКА И СОХРАНЕНИЕ ДАННЫХ ====================
+
+    function loadPersistedData() {
+      try {
+        const savedBooks = localStorage.getItem(STORAGE_BOOKS_KEY);
+        if (savedBooks) {
+          const parsed = JSON.parse(savedBooks);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            state.books = parsed;
+          } else {
+            state.books = JSON.parse(JSON.stringify(DEFAULT_BOOKS));
+          }
+        } else {
+          state.books = JSON.parse(JSON.stringify(DEFAULT_BOOKS));
+        }
+
+        const savedSettings = localStorage.getItem(STORAGE_SETTINGS_KEY);
+        if (savedSettings) {
+          state.settings = { ...DEFAULT_SETTINGS, ...JSON.parse(savedSettings) };
+        }
+      } catch (e) {
+        state.books = JSON.parse(JSON.stringify(DEFAULT_BOOKS));
+        state.settings = { ...DEFAULT_SETTINGS };
+      }
+    }
+
+    function saveBooksToStorage() {
+      try {
+        localStorage.setItem(STORAGE_BOOKS_KEY, JSON.stringify(state.books));
+      } catch (e) {
+        // Игнорируем ошибку квоты хранилища
+      }
+    }
+
+    function saveSettingsToStorage() {
+      try {
+        localStorage.setItem(STORAGE_SETTINGS_KEY, JSON.stringify(state.settings));
+      } catch (e) {
+        // Игнорируем ошибку квоты хранилища
+      }
+    }
+
+    // ==================== УТИЛИТЫ ФОРМАТИРОВАНИЯ ====================
+
+    function formatRub(priceRub) {
+      const num = Math.max(0, Math.round(Number(priceRub) || 0));
+      return `${num.toLocaleString('ru-RU')} ₽`;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Синхронизация всех кнопок-ссылок на Telegram-канал на странице
+    function applyTelegramSettings() {
+      const url = state.settings.tgUrl || DEFAULT_SETTINGS.tgUrl;
+      const label = state.settings.tgLabel || DEFAULT_SETTINGS.tgLabel;
+
+      const linkIds = ['headerTgLink', 'heroTgLink', 'cardTgLink', 'footerTgLink'];
+      linkIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.href = url;
+      });
+
+      const labelIds = ['headerTgLabel', 'heroTgLabel', 'footerTgLabel'];
+      labelIds.forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = label;
+      });
+    }
+
+    // ==================== ГЕНЕРАТОР ЯПОНСКИХ ОБЛОЖЕК (SVG / ФОТО) ====================
+
+    function renderBookCoverArtwork(book, size = 'card') {
+      const c = book.cover || {
+        bg: '#18181B',
+        accent: '#D93829',
+        text: '#FAF9F6',
+        obiBg: '#D93829',
+        obiText: '#FFFFFF',
+        jpVertical: book.titleJp ? book.titleJp.slice(0, 10) : '日本原書',
+        code: 'JAPAN EDITION',
+        motif: 'crest'
+      };
+      const isLarge = size === 'modal';
+      const sizeClasses = isLarge
+        ? 'w-56 sm:w-64 aspect-[3/4.15]'
+        : 'w-36 sm:w-40 aspect-[3/4.15]';
+
+      // Если пользователь указал ссылку на реальную обложку — показываем её с фолбэком на SVG
+      if (book.imageUrl && book.imageUrl.trim() !== '') {
+        return `
+          <div class="book-cover-frame book-spine-highlight relative select-none overflow-hidden rounded-r-md rounded-l-[3px] border border-black/10 bg-zinc-100 ${sizeClasses}">
+            <img
+              src="${escapeHtml(book.imageUrl.trim())}"
+              alt="${escapeHtml(book.titleRu)}"
+              class="w-full h-full object-cover"
+              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+            />
+            <div style="display:none; background-color:${c.bg}; color:${c.text};" class="w-full h-full flex-col justify-between p-3">
+              <span class="text-[8px] font-mono opacity-75">${escapeHtml(c.code || 'JAPAN EDITION')}</span>
+              <span class="font-serifjp text-xs leading-snug">${escapeHtml(book.titleJp || book.titleRu)}</span>
+              <span class="text-[9px] opacity-80">Оригинал из Японии</span>
+            </div>
+          </div>
+        `;
+      }
+
+      let motifSvg = '';
+      switch (c.motif) {
+        case 'ring':
+          motifSvg = `
+            <circle cx="120" cy="145" r="46" fill="none" stroke="${c.accent}" stroke-width="2.5" opacity="0.9"/>
+            <circle cx="120" cy="128" r="34" fill="none" stroke="${c.accent}" stroke-width="1.5" opacity="0.65"/>
+            <circle cx="120" cy="162" r="34" fill="none" stroke="${c.accent}" stroke-width="1.5" opacity="0.65"/>
+            <line x1="120" y1="78" x2="120" y2="212" stroke="${c.accent}" stroke-width="1.5" opacity="0.7"/>
+          `;
+          break;
+        case 'crest':
+          motifSvg = `
+            <rect x="74" y="95" width="92" height="92" fill="none" stroke="${c.accent}" stroke-width="1.5"/>
+            <circle cx="120" cy="141" r="32" fill="${c.accent}" opacity="0.88"/>
+            <line x1="60" y1="141" x2="180" y2="141" stroke="${c.text}" stroke-width="1" opacity="0.35"/>
+          `;
+          break;
+        case 'grid':
+          motifSvg = `
+            <g stroke="${c.text}" stroke-width="1" opacity="0.22">
+              <line x1="56" y1="90" x2="184" y2="90"/>
+              <line x1="56" y1="125" x2="184" y2="125"/>
+              <line x1="56" y1="160" x2="184" y2="160"/>
+              <line x1="56" y1="195" x2="184" y2="195"/>
+              <line x1="88" y1="75" x2="88" y2="210"/>
+              <line x1="120" y1="75" x2="120" y2="210"/>
+              <line x1="152" y1="75" x2="152" y2="210"/>
+            </g>
+            <rect x="88" y="125" width="64" height="35" fill="${c.accent}"/>
+          `;
+          break;
+        case 'door':
+          motifSvg = `
+            <rect x="86" y="92" width="68" height="104" fill="none" stroke="${c.accent}" stroke-width="2.5"/>
+            <rect x="94" y="100" width="52" height="96" fill="${c.accent}" opacity="0.22"/>
+            <circle cx="142" cy="148" r="3" fill="${c.accent}"/>
+          `;
+          break;
+        case 'sphere':
+          motifSvg = `
+            <circle cx="120" cy="142" r="44" fill="${c.accent}" opacity="0.9"/>
+            <circle cx="136" cy="126" r="14" fill="${c.bg}" opacity="0.9"/>
+          `;
+          break;
+        case 'emblem':
+          motifSvg = `
+            <polygon points="120,88 164,140 120,192 76,140" fill="none" stroke="${c.accent}" stroke-width="2"/>
+            <polygon points="120,104 150,140 120,176 90,140" fill="${c.accent}" opacity="0.3"/>
+          `;
+          break;
+        case 'leaf':
+          motifSvg = `
+            <path d="M120 90 C152 110, 152 165, 120 190 C88 165, 88 110, 120 90 Z" fill="${c.accent}" opacity="0.85"/>
+            <line x1="120" y1="84" x2="120" y2="198" stroke="${c.bg}" stroke-width="1.5"/>
+          `;
+          break;
+        default:
+          motifSvg = `
+            <rect x="76" y="88" width="88" height="108" fill="none" stroke="${c.accent}" stroke-width="2.5"/>
+            <line x1="76" y1="88" x2="164" y2="196" stroke="${c.accent}" stroke-width="1.5" opacity="0.6"/>
+          `;
+      }
+
+      return `
+        <div
+          class="book-cover-frame book-spine-highlight relative select-none overflow-hidden rounded-r-md rounded-l-[3px] border border-black/10 ${sizeClasses}"
+          style="background-color: ${c.bg}; color: ${c.text};"
+        >
+          <!-- Верхняя издательская строка -->
+          <div class="px-3.5 pt-3 flex items-center justify-between text-[8px] tracking-[0.18em] font-mono opacity-75">
+            <span>${escapeHtml(c.code || 'JAPAN EDITION')}</span>
+            <span>原書</span>
+          </div>
+
+          <!-- Центральная SVG-графика -->
+          <svg viewBox="0 0 240 280" class="w-full h-full absolute inset-0 pointer-events-none">
+            ${motifSvg}
+          </svg>
+
+          <!-- Вертикальный японский заголовок -->
+          <div
+            class="writing-vertical font-serifjp font-bold tracking-[0.18em] absolute right-3 top-9 ${isLarge ? 'text-xs' : 'text-[10px]'} opacity-90 max-h-[65%] overflow-hidden"
+            style="color: ${c.text};"
+          >
+            ${escapeHtml(c.jpVertical || '日本書籍')}
+          </div>
+
+          <!-- Бумажная лента (Obi / 帯) -->
+          <div
+            class="absolute bottom-0 inset-x-0 px-3 py-2 flex items-center justify-between border-t border-black/10"
+            style="background-color: ${c.obiBg}; color: ${c.obiText};"
+          >
+            <span class="font-jp text-[9px] font-medium tracking-wider truncate">
+              日本版・オリジナル
+            </span>
+            <span class="text-[8px] font-mono opacity-80 shrink-0 ml-1">
+              JP
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    // ==================== ФИЛЬТРАЦИЯ И СОРТИРОВКА ====================
+
+    function getFilteredBooks() {
+      const q = state.searchQuery.trim().toLowerCase();
+
+      let list = state.books.filter((book) => {
+        const matchCategory =
+          state.category === 'Все' || book.category === state.category;
+
+        const matchAvailability =
+          state.availability === 'all' || book.status === state.availability;
+
+        const matchSearch =
+          !q ||
+          book.titleRu.toLowerCase().includes(q) ||
+          (book.titleJp && book.titleJp.toLowerCase().includes(q)) ||
+          book.author.toLowerCase().includes(q) ||
+          book.publisher.toLowerCase().includes(q) ||
+          book.category.toLowerCase().includes(q);
+
+        return matchCategory && matchAvailability && matchSearch;
+      });
+
+      if (state.sortBy === 'price-asc') {
+        list = [...list].sort((a, b) => a.priceRub - b.priceRub);
+      } else if (state.sortBy === 'price-desc') {
+        list = [...list].sort((a, b) => b.priceRub - a.priceRub);
+      } else if (state.sortBy === 'newest') {
+        list = [...list].sort((a, b) => {
+          if (Boolean(a.isNew) === Boolean(b.isNew)) return (b.year || 0) - (a.year || 0);
+          return a.isNew ? -1 : 1;
+        });
+      }
+
+      return list;
+    }
+
+    // ==================== РЕНДЕР ФИЛЬТРОВ И КАТАЛОГА ====================
+
+    function renderFilters() {
+      const catContainer = document.getElementById('categoryFilters');
+      catContainer.innerHTML = CATEGORIES.map((cat) => {
+        const active = state.category === cat;
+        return `
+          <button
+            type="button"
+            data-category="${escapeHtml(cat)}"
+            class="category-pill shrink-0 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-medium border transition-colors ${
+              active
+                ? 'bg-[#18181B] text-white border-[#18181B]'
+                : 'bg-white text-[#52525B] border-[#E4E4E7] hover:border-rose-400 hover:text-[#18181B]'
+            }"
+          >
+            ${escapeHtml(cat)}
+          </button>
+        `;
+      }).join('');
+
+      const availContainer = document.getElementById('availabilityFilters');
+      availContainer.innerHTML = AVAILABILITY_FILTERS.map((item) => {
+        const active = state.availability === item.id;
+        let dotHtml = '';
+        if (item.id === 'in_stock_rf') dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>';
+        if (item.id === 'order_jp') dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>';
+        if (item.id === 'preorder') dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>';
+        if (item.id === 'out_of_stock') dotHtml = '<span class="w-1.5 h-1.5 rounded-full bg-zinc-400"></span>';
+
+        return `
+          <button
+            type="button"
+            data-availability="${item.id}"
+            class="avail-pill shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${
+              active
+                ? 'bg-rose-50/70 border-rose-400 text-[#18181B]'
+                : 'bg-white border-[#E4E4E7] text-[#52525B] hover:text-[#18181B]'
+            }"
+          >
+            ${dotHtml}
+            <span>${escapeHtml(item.label)}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    function renderCatalog() {
+      const books = getFilteredBooks();
+      const grid = document.getElementById('catalogGrid');
+      const emptyState = document.getElementById('emptyState');
+      const counter = document.getElementById('resultsCounter');
+
+      const countWord =
+        books.length === 1
+          ? 'издание'
+          : books.length >= 2 && books.length <= 4
+          ? 'издания'
+          : 'изданий';
+      counter.textContent = `Найдено: ${books.length} ${countWord}`;
+
+      if (books.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = books
+        .map((book) => {
+          const statusInfo = STATUS_META[book.status] || STATUS_META.order_jp;
+          const inCartItem = state.cart.find((c) => c.bookId === book.id);
+          const isUnavailable = !statusInfo.available;
+
+          return `
+            <article class="book-card group bg-white border border-[#E4E4E7] hover:border-rose-300 rounded-2xl p-5 flex flex-col justify-between transition-colors ${isUnavailable ? 'opacity-85' : ''}">
+              <div>
+                <!-- Верхняя панель карточки: статус и метка новинки -->
+                <div class="flex items-center justify-between gap-2 mb-4">
+                  <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-[11px] font-medium ${statusInfo.badgeClass}">
+                    <span class="w-1.5 h-1.5 rounded-full ${statusInfo.dotClass}"></span>
+                    ${statusInfo.label}
+                  </span>
+                  ${
+                    book.isNew
+                      ? '<span class="px-2 py-0.5 rounded-md bg-rose-50 border border-rose-200 text-[10px] font-semibold uppercase tracking-wider text-rose-600">✦ Новинка</span>'
+                      : `<span class="text-[11px] text-zinc-400 font-mono">${book.year || ''}</span>`
+                  }
+                </div>
+
+                <!-- Витрина обложки -->
+                <div
+                  data-open-book="${escapeHtml(book.id)}"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Открыть описание: ${escapeHtml(book.titleRu)}"
+                  class="cursor-pointer bg-gradient-to-b from-[#FFF9FA] to-[#FAF9F6] border border-[#E4E4E7]/80 rounded-xl py-6 px-4 flex items-center justify-center mb-4 focus:outline-none focus:ring-2 focus:ring-rose-500"
+                >
+                  ${renderBookCoverArtwork(book, 'card')}
+                </div>
+
+                <!-- Категория и издательство -->
+                <div class="flex items-center justify-between text-[11px] text-[#52525B] mb-1">
+                  <span class="font-medium text-[#18181B]/75">${escapeHtml(book.category)}</span>
+                  <span class="truncate max-w-[140px]">${escapeHtml(book.publisher)}</span>
+                </div>
+
+                <!-- Японское и русское названия -->
+                <p class="font-jp text-xs text-zinc-400 line-clamp-1 mb-0.5" title="${escapeHtml(book.titleJp || '')}">
+                  ${escapeHtml(book.titleJp || '')}
+                </p>
+                <h2
+                  data-open-book="${escapeHtml(book.id)}"
+                  class="cursor-pointer font-bold text-base text-[#18181B] group-hover:text-rose-600 transition-colors leading-snug line-clamp-2"
+                >
+                  ${escapeHtml(book.titleRu)}
+                </h2>
+                <p class="text-xs text-[#52525B] mt-1 line-clamp-1">
+                  ${escapeHtml(book.author)}
+                </p>
+              </div>
+
+              <!-- Нижний блок: Цена в ₽ и кнопки -->
+              <div class="mt-5 pt-4 border-t border-[#E4E4E7]">
+                <div class="flex items-baseline justify-between mb-3">
+                  <span class="text-lg font-bold text-[#18181B] tracking-tight">
+                    ${formatRub(book.priceRub)}
+                  </span>
+                  <span class="text-[11px] text-zinc-400">${book.pages ? `${book.pages} стр.` : ''}</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    data-open-book="${escapeHtml(book.id)}"
+                    class="px-3 py-2.5 rounded-xl bg-[#FAF9F6] hover:bg-rose-50/70 border border-[#E4E4E7] text-xs sm:text-sm font-medium text-[#18181B] transition-colors"
+                  >
+                    Подробнее
+                  </button>
+                  ${
+                    isUnavailable
+                      ? `<button
+                          type="button"
+                          disabled
+                          class="px-3 py-2.5 rounded-xl bg-zinc-100 border border-[#E4E4E7] text-xs sm:text-sm font-medium text-zinc-400 cursor-not-allowed"
+                        >
+                          Нет в наличии
+                        </button>`
+                      : `<button
+                          type="button"
+                          data-add-cart="${escapeHtml(book.id)}"
+                          class="px-3 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-colors flex items-center justify-center gap-1.5 ${
+                            inCartItem
+                              ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
+                              : 'bg-[#18181B] hover:bg-rose-600 text-white'
+                          }"
+                        >
+                          ${
+                            inCartItem
+                              ? `<span>В корзине (${inCartItem.qty})</span>`
+                              : `<span>${statusInfo.ctaText}</span>`
+                          }
+                        </button>`
+                  }
+                </div>
+              </div>
+            </article>
+          `;
+        })
+        .join('');
+    }
+
+    // ==================== МОДАЛЬНОЕ ОКНО КАРТОЧКИ КНИГИ ====================
+
+    function openBookModal(bookId) {
+      const book = state.books.find((b) => b.id === bookId);
+      if (!book) return;
+
+      const statusInfo = STATUS_META[book.status] || STATUS_META.order_jp;
+      const inCartItem = state.cart.find((c) => c.bookId === book.id);
+      const modal = document.getElementById('bookModal');
+      const modalBody = document.getElementById('bookModalBody');
+
+      modalBody.innerHTML = `
+        <!-- Левая колонка: Обложка -->
+        <div class="md:col-span-5 bg-gradient-to-b from-[#FFF9FA] to-[#FAF9F6] border-b md:border-b-0 md:border-r border-[#E4E4E7] p-7 sm:p-9 flex flex-col items-center justify-center">
+          ${renderBookCoverArtwork(book, 'modal')}
+          <p class="mt-4 text-[11px] text-[#52525B] font-jp tracking-wider">
+            オリジナル日本版 · Оригинальное издание
+          </p>
+        </div>
+
+        <!-- Правая колонка: Описание и характеристики -->
+        <div class="md:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
+          <div>
+            <div class="flex flex-wrap items-center gap-2 mb-3 pr-8">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-medium ${statusInfo.badgeClass}">
+                <span class="w-1.5 h-1.5 rounded-full ${statusInfo.dotClass}"></span>
+                ${statusInfo.label}
+              </span>
+              <span class="text-xs text-[#52525B] px-2.5 py-1 rounded-lg bg-[#FAF9F6] border border-[#E4E4E7]">
+                ${escapeHtml(book.category)}
+              </span>
+            </div>
+
+            <p class="font-jp text-xs sm:text-sm text-zinc-400">${escapeHtml(book.titleJp || '')}</p>
+            <h2 id="modalBookTitle" class="font-editorial text-2xl sm:text-3xl font-bold text-[#18181B] mt-1 leading-tight">
+              ${escapeHtml(book.titleRu)}
+            </h2>
+            <p class="text-sm text-[#52525B] mt-1">${escapeHtml(book.author)}</p>
+
+            <p class="text-sm text-zinc-700 leading-relaxed mt-4">
+              ${escapeHtml(book.description || '')}
+            </p>
+
+            <!-- Характеристики издания -->
+            <div class="mt-5 border-t border-[#E4E4E7] pt-4">
+              <h3 class="text-xs font-semibold uppercase tracking-wider text-zinc-400 mb-2.5">
+                Характеристики издания
+              </h3>
+              <dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 text-xs sm:text-sm">
+                <div class="flex justify-between sm:block border-b sm:border-b-0 border-zinc-100 pb-1.5 sm:pb-0">
+                  <dt class="text-[#52525B]">Издательство</dt>
+                  <dd class="font-medium text-[#18181B]">${escapeHtml(book.publisher)}</dd>
+                </div>
+                <div class="flex justify-between sm:block border-b sm:border-b-0 border-zinc-100 pb-1.5 sm:pb-0">
+                  <dt class="text-[#52525B]">Год выпуска</dt>
+                  <dd class="font-medium text-[#18181B]">${book.year || '—'}</dd>
+                </div>
+                <div class="flex justify-between sm:block border-b sm:border-b-0 border-zinc-100 pb-1.5 sm:pb-0">
+                  <dt class="text-[#52525B]">Объём</dt>
+                  <dd class="font-medium text-[#18181B]">${book.pages ? `${book.pages} страниц` : '—'}</dd>
+                </div>
+                <div class="flex justify-between sm:block border-b sm:border-b-0 border-zinc-100 pb-1.5 sm:pb-0">
+                  <dt class="text-[#52525B]">Язык издания</dt>
+                  <dd class="font-medium text-[#18181B]">Японский (оригинал)</dd>
+                </div>
+                <div class="sm:col-span-2 pt-0.5">
+                  <dt class="text-[#52525B]">Формат и переплёт</dt>
+                  <dd class="font-medium text-[#18181B]">${escapeHtml(book.format || 'Стандартный книжный формат')}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- Сроки и способ доставки через посредника -->
+            <div class="mt-4 p-3 rounded-xl bg-rose-50/50 border border-rose-200/70 flex items-start gap-2.5 text-xs text-[#18181B]">
+              <svg class="w-4 h-4 text-rose-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>${statusInfo.delivery}</span>
+            </div>
+          </div>
+
+          <!-- Цена в рублях и кнопка добавления в корзину -->
+          <div class="mt-6 pt-4 border-t border-[#E4E4E7] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="text-2xl font-bold text-[#18181B]">
+                ${formatRub(book.priceRub)}
+              </div>
+              <div class="text-xs text-[#52525B]">
+                Финальная цена в рублях с учётом выкупа
+              </div>
+            </div>
+
+            ${
+              statusInfo.available
+                ? `<button
+                    type="button"
+                    data-modal-add-cart="${escapeHtml(book.id)}"
+                    class="px-6 py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold transition-colors"
+                  >
+                    ${inCartItem ? `Добавить ещё (в корзине: ${inCartItem.qty})` : 'Добавить в корзину'}
+                  </button>`
+                : `<a
+                    href="${escapeHtml(state.settings.tgUrl)}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="px-5 py-3 rounded-xl bg-zinc-100 hover:bg-zinc-200 text-[#18181B] text-xs sm:text-sm font-medium text-center transition-colors"
+                  >
+                    Уточнить повторный выкуп в ТГ →
+                  </a>`
+            }
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeBookModal() {
+      const modal = document.getElementById('bookModal');
+      modal.classList.add('hidden');
+      updateBodyScrollLock();
+    }
+
+    function updateBodyScrollLock() {
+      const isBookOpen = !document.getElementById('bookModal').classList.contains('hidden');
+      const isAdminOpen = !document.getElementById('adminModal').classList.contains('hidden');
+      const isCartOpen = !document.getElementById('cartDrawerOverlay').classList.contains('hidden');
+      if (isBookOpen || isAdminOpen || isCartOpen) {
+        document.body.classList.add('overflow-hidden');
+      } else {
+        document.body.classList.remove('overflow-hidden');
+      }
+    }
+
+    // ==================== ПАНЕЛЬ УПРАВЛЕНИЯ КАТАЛОГОМ (ADMIN) ====================
+
+    function openAdminModal(tab = 'books', bookIdToEdit = null) {
+      state.adminTab = tab;
+      state.editingBookId = bookIdToEdit;
+      renderAdminModal();
+      document.getElementById('adminModal').classList.remove('hidden');
+      updateBodyScrollLock();
+    }
+
+    function closeAdminModal() {
+      document.getElementById('adminModal').classList.add('hidden');
+      state.editingBookId = null;
+      updateBodyScrollLock();
+    }
+
+    function renderAdminModal() {
+      document.getElementById('adminBooksCount').textContent = state.books.length;
+      const formTabBtn = document.getElementById('adminFormTabBtn');
+      formTabBtn.textContent = state.editingBookId ? '✎ Редактирование книги' : '+ Добавить книгу';
+
+      // Обновляем стили вкладок
+      document.querySelectorAll('.admin-tab-btn').forEach((btn) => {
+        const isActive = btn.dataset.adminTab === state.adminTab;
+        btn.className = `admin-tab-btn py-3 px-3 text-xs sm:text-sm border-b-2 whitespace-nowrap transition-colors ${
+          isActive
+            ? 'font-semibold border-rose-500 text-[#18181B]'
+            : 'font-medium border-transparent text-[#52525B] hover:text-[#18181B]'
+        }`;
+      });
+
+      const container = document.getElementById('adminModalContent');
+
+      // ВКЛАДКА 1: СПИСОК КНИГ И БЫСТРОЕ РЕДАКТИРОВАНИЕ ЦЕН/СТАТУСОВ
+      if (state.adminTab === 'books') {
+        const q = state.adminSearch.trim().toLowerCase();
+        const filteredAdminBooks = state.books.filter(
+          (b) =>
+            !q ||
+            b.titleRu.toLowerCase().includes(q) ||
+            (b.titleJp && b.titleJp.toLowerCase().includes(q)) ||
+            b.author.toLowerCase().includes(q) ||
+            b.category.toLowerCase().includes(q)
+        );
+
+        container.innerHTML = `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div class="relative flex-1 max-w-md">
+              <input
+                id="adminSearchInput"
+                type="search"
+                value="${escapeHtml(state.adminSearch)}"
+                placeholder="Фильтр по названию, категории или автору..."
+                class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] focus:bg-white focus:outline-none focus:border-rose-500"
+              />
+            </div>
+
+            <button
+              type="button"
+              id="adminQuickAddBtn"
+              class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-semibold transition-colors shrink-0"
+            >
+              + Добавить новое издание
+            </button>
+          </div>
+
+          <div class="space-y-2.5">
+            ${
+              filteredAdminBooks.length === 0
+                ? '<p class="text-sm text-[#52525B] py-8 text-center">Книги не найдены.</p>'
+                : filteredAdminBooks
+                    .map((book) => {
+                      return `
+                        <div class="p-3.5 rounded-xl bg-[#FAF9F6] border border-[#E4E4E7] flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+                          <div class="flex items-start gap-3 min-w-0 flex-1">
+                            <div
+                              class="w-9 h-12 rounded shrink-0 border border-black/10 flex items-center justify-center font-bold text-[10px]"
+                              style="background-color: ${book.cover?.bg || '#18181B'}; color: ${book.cover?.text || '#FFFFFF'};"
+                            >
+                              PG
+                            </div>
+                            <div class="min-w-0 flex-1">
+                              <div class="flex flex-wrap items-center gap-1.5">
+                                <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-white border border-[#E4E4E7] text-[#52525B]">
+                                  ${escapeHtml(book.category)}
+                                </span>
+                                ${
+                                  book.isNew
+                                    ? '<span class="text-[10px] font-semibold text-rose-600">НОВИНКА</span>'
+                                    : ''
+                                }
+                              </div>
+                              <h4 class="font-semibold text-sm text-[#18181B] mt-1 line-clamp-1">
+                                ${escapeHtml(book.titleRu)}
+                              </h4>
+                              <p class="text-xs text-[#52525B] line-clamp-1">
+                                ${escapeHtml(book.author)} · ${escapeHtml(book.publisher)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <!-- Быстрое изменение цены, статуса и кнопки действий -->
+                          <div class="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+                            <!-- Инлайн-редактор цены в ₽ -->
+                            <div class="relative w-32">
+                              <input
+                                type="number"
+                                min="0"
+                                step="10"
+                                value="${book.priceRub}"
+                                data-inline-price="${escapeHtml(book.id)}"
+                                aria-label="Цена в рублях"
+                                class="w-full pl-3 pr-7 py-1.5 bg-white border border-[#E4E4E7] focus:border-rose-500 rounded-lg text-sm font-semibold text-[#18181B] focus:outline-none"
+                              />
+                              <span class="absolute inset-y-0 right-2.5 flex items-center text-xs text-zinc-400 pointer-events-none">₽</span>
+                            </div>
+
+                            <!-- Инлайн-выбор статуса -->
+                            <select
+                              data-inline-status="${escapeHtml(book.id)}"
+                              aria-label="Статус наличия"
+                              class="px-2.5 py-1.5 bg-white border border-[#E4E4E7] focus:border-rose-500 rounded-lg text-xs font-medium text-[#18181B] focus:outline-none"
+                            >
+                              <option value="in_stock_rf" ${book.status === 'in_stock_rf' ? 'selected' : ''}>В наличии (РФ)</option>
+                              <option value="order_jp" ${book.status === 'order_jp' ? 'selected' : ''}>Под заказ (через посредника)</option>
+                              <option value="preorder" ${book.status === 'preorder' ? 'selected' : ''}>Предзаказ</option>
+                              <option value="out_of_stock" ${book.status === 'out_of_stock' ? 'selected' : ''}>Нет в наличии</option>
+                            </select>
+
+                            <!-- Редактировать карточку -->
+                            <button
+                              type="button"
+                              data-edit-book="${escapeHtml(book.id)}"
+                              class="px-3 py-1.5 rounded-lg bg-white border border-[#E4E4E7] hover:border-[#18181B] text-xs font-medium text-[#18181B] transition-colors"
+                            >
+                              Изменить
+                            </button>
+
+                            <!-- Удалить карточку -->
+                            <button
+                              type="button"
+                              data-delete-book="${escapeHtml(book.id)}"
+                              aria-label="Удалить книгу"
+                              class="p-1.5 rounded-lg bg-white border border-[#E4E4E7] hover:border-rose-500 text-zinc-400 hover:text-rose-600 transition-colors"
+                              title="Удалить издание"
+                            >
+                              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                              </svg>
+                            </button>
+                          </div>
+                        </div>
+                      `;
+                    })
+                    .join('')
+            }
+          </div>
+        `;
+        return;
+      }
+
+      // ВКЛАДКА 2: ФОРМА ДОБАВЛЕНИЯ / РЕДАКТИРОВАНИЯ КНИГИ
+      if (state.adminTab === 'form') {
+        const editingBook = state.editingBookId
+          ? state.books.find((b) => b.id === state.editingBookId)
+          : null;
+
+        const bookData = editingBook || {
+          titleRu: '',
+          titleJp: '',
+          author: '',
+          publisher: '',
+          category: 'Аниме',
+          status: 'order_jp',
+          priceRub: 4990,
+          year: new Date().getFullYear(),
+          pages: 224,
+          format: 'A4 (297 × 210 мм), твёрдый переплёт в суперобложке',
+          isNew: true,
+          imageUrl: '',
+          description: '',
+          cover: {
+            bg: '#18181B',
+            accent: '#D93829',
+            text: '#FAF9F6',
+            obiBg: '#D93829',
+            obiText: '#FFFFFF',
+            jpVertical: '日本原書',
+            code: 'JP EDITION',
+            motif: 'crest'
+          }
+        };
+
+        const bookCategories = CATEGORIES.filter((c) => c !== 'Все');
+
+        container.innerHTML = `
+          <form id="bookEditorForm" class="space-y-4 max-w-3xl">
+            <div class="flex items-center justify-between">
+              <h3 class="text-base font-bold text-[#18181B]">
+                ${editingBook ? 'Редактирование карточки издания' : 'Новая карточка в каталоге'}
+              </h3>
+              ${
+                editingBook
+                  ? `<button type="button" id="cancelEditBookBtn" class="text-xs text-[#52525B] hover:text-[#18181B]">← Отменить редактирование</button>`
+                  : ''
+              }
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Название на русском *</label>
+                <input
+                  type="text"
+                  name="titleRu"
+                  required
+                  value="${escapeHtml(bookData.titleRu)}"
+                  placeholder="Например: Frieren: Beyond Journey's End — Официальный артбук"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Оригинальное название (JP / EN)</label>
+                <input
+                  type="text"
+                  name="titleJp"
+                  value="${escapeHtml(bookData.titleJp || '')}"
+                  placeholder="葬送のフリーレン 画集"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm font-jp focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Автор или аниме-студия *</label>
+                <input
+                  type="text"
+                  name="author"
+                  required
+                  value="${escapeHtml(bookData.author)}"
+                  placeholder="Madhouse / Канэхито Ямада"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Категория *</label>
+                <select
+                  name="category"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                >
+                  ${bookCategories
+                    .map(
+                      (cat) =>
+                        `<option value="${escapeHtml(cat)}" ${bookData.category === cat ? 'selected' : ''}>${escapeHtml(cat)}</option>`
+                    )
+                    .join('')}
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Статус наличия *</label>
+                <select
+                  name="status"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                >
+                  <option value="in_stock_rf" ${bookData.status === 'in_stock_rf' ? 'selected' : ''}>В наличии (РФ)</option>
+                  <option value="order_jp" ${bookData.status === 'order_jp' ? 'selected' : ''}>Под заказ (через посредника)</option>
+                  <option value="preorder" ${bookData.status === 'preorder' ? 'selected' : ''}>Предзаказ</option>
+                  <option value="out_of_stock" ${bookData.status === 'out_of_stock' ? 'selected' : ''}>Нет в наличии</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Цена в рублях (₽) *</label>
+                <input
+                  type="number"
+                  name="priceRub"
+                  min="0"
+                  step="10"
+                  required
+                  value="${bookData.priceRub}"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm font-semibold focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Издательство</label>
+                <input
+                  type="text"
+                  name="publisher"
+                  value="${escapeHtml(bookData.publisher)}"
+                  placeholder="Shogakukan / KADOKAWA"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Год выпуска</label>
+                <input
+                  type="number"
+                  name="year"
+                  value="${bookData.year || 2025}"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Количество страниц</label>
+                <input
+                  type="number"
+                  name="pages"
+                  value="${bookData.pages || 200}"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Формат и переплёт</label>
+                <input
+                  type="text"
+                  name="format"
+                  value="${escapeHtml(bookData.format || '')}"
+                  placeholder="A4, твёрдый переплёт, суперобложка"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-medium text-[#18181B] mb-1">
+                  Ссылка на фото обложки (необязательно — если пусто, сгенерируется японская SVG-обложка)
+                </label>
+                <input
+                  type="url"
+                  name="imageUrl"
+                  value="${escapeHtml(bookData.imageUrl || '')}"
+                  placeholder="https://example.com/cover.jpg"
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-xs font-medium text-[#18181B] mb-1">Описание издания</label>
+                <textarea
+                  name="description"
+                  rows="3"
+                  placeholder="Краткое описание содержания артбука, иллюстраций и особенностей печати..."
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm focus:bg-white focus:outline-none focus:border-rose-500"
+                >${escapeHtml(bookData.description || '')}</textarea>
+              </div>
+
+              <!-- Оформление японской обложки -->
+              <div class="sm:col-span-2 p-4 rounded-xl bg-[#FAF9F6] border border-[#E4E4E7] grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <label class="block text-[11px] font-medium text-[#52525B] mb-1">Цвет обложки (SVG)</label>
+                  <input
+                    type="color"
+                    name="coverBg"
+                    value="${escapeHtml(bookData.cover?.bg || '#18181B')}"
+                    class="w-full h-9 rounded-lg border border-[#E4E4E7] cursor-pointer bg-white p-1"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-medium text-[#52525B] mb-1">Цвет акцента / ленты</label>
+                  <input
+                    type="color"
+                    name="coverAccent"
+                    value="${escapeHtml(bookData.cover?.accent || '#D93829')}"
+                    class="w-full h-9 rounded-lg border border-[#E4E4E7] cursor-pointer bg-white p-1"
+                  />
+                </div>
+                <div>
+                  <label class="block text-[11px] font-medium text-[#52525B] mb-1">Вертикальный текст (JP)</label>
+                  <input
+                    type="text"
+                    name="jpVertical"
+                    value="${escapeHtml(bookData.cover?.jpVertical || '日本書籍')}"
+                    class="w-full px-3 py-1.5 bg-white border border-[#E4E4E7] rounded-lg text-xs font-jp"
+                  />
+                </div>
+              </div>
+
+              <div class="sm:col-span-2 flex items-center gap-2">
+                <input
+                  id="bookIsNewCheckbox"
+                  type="checkbox"
+                  name="isNew"
+                  ${bookData.isNew ? 'checked' : ''}
+                  class="w-4 h-4 rounded border-[#E4E4E7] text-rose-600 focus:ring-rose-500"
+                />
+                <label for="bookIsNewCheckbox" class="text-xs sm:text-sm text-[#18181B]">
+                  Отметить бейджем «Новинка»
+                </label>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-[#E4E4E7] flex items-center gap-3">
+              <button
+                type="submit"
+                class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold transition-colors"
+              >
+                ${editingBook ? 'Сохранить изменения' : 'Добавить книгу в каталог'}
+              </button>
+              <button
+                type="button"
+                id="backToAdminListBtn"
+                class="px-4 py-2.5 rounded-xl bg-[#FAF9F6] border border-[#E4E4E7] text-sm font-medium text-[#18181B]"
+              >
+                Отмена
+              </button>
+            </div>
+          </form>
+        `;
+        return;
+      }
+
+      // ВКЛАДКА 3: НАСТРОЙКИ ТГ-КАНАЛА И ЭКСПОРТ / ИМПОРТ КАТАЛОГА
+      if (state.adminTab === 'settings') {
+        container.innerHTML = `
+          <div class="space-y-6 max-w-2xl">
+            <!-- Настройка Telegram-канала -->
+            <form id="tgSettingsForm" class="p-5 rounded-2xl bg-[#FAF9F6] border border-[#E4E4E7] space-y-3.5">
+              <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-[#229ED9]" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                </svg>
+                <h3 class="text-sm sm:text-base font-bold text-[#18181B]">Ссылка на ваш Telegram-канал</h3>
+              </div>
+              <p class="text-xs text-[#52525B]">
+                Укажите адрес вашего канала с мангой — ссылка обновится сразу в шапке, герой-блоке и подвале сайта.
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs font-medium text-[#18181B] mb-1">Ссылка на канал (URL)</label>
+                  <input
+                    type="url"
+                    name="tgUrl"
+                    required
+                    value="${escapeHtml(state.settings.tgUrl)}"
+                    placeholder="https://t.me/your_manga_channel"
+                    class="w-full px-3.5 py-2 bg-white border border-[#E4E4E7] rounded-xl text-sm focus:outline-none focus:border-rose-500"
+                  />
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-[#18181B] mb-1">Текст на кнопке</label>
+                  <input
+                    type="text"
+                    name="tgLabel"
+                    required
+                    value="${escapeHtml(state.settings.tgLabel)}"
+                    placeholder="Наш ТГ-канал с мангой"
+                    class="w-full px-3.5 py-2 bg-white border border-[#E4E4E7] rounded-xl text-sm focus:outline-none focus:border-rose-500"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                class="px-4 py-2 rounded-xl bg-[#18181B] hover:bg-rose-600 text-white text-xs sm:text-sm font-medium transition-colors"
+              >
+                Сохранить настройки Telegram
+              </button>
+            </form>
+
+            <!-- Экспорт / Импорт / Код -->
+            <div class="p-5 rounded-2xl bg-white border border-[#E4E4E7] space-y-3">
+              <h3 class="text-sm sm:text-base font-bold text-[#18181B]">Резервная копия и обновление файла сайта</h3>
+              <p class="text-xs text-[#52525B] leading-relaxed">
+                Все правки автоматически сохраняются в вашем браузере. Чтобы перенести базу на другое устройство или вшить обновлённый ассортимент прямо в HTML-файл сайта, воспользуйтесь инструментами ниже:
+              </p>
+
+              <div class="flex flex-wrap gap-2.5 pt-1">
+                <button
+                  type="button"
+                  id="exportJsonBtn"
+                  class="px-3.5 py-2 rounded-xl bg-[#FAF9F6] hover:bg-zinc-200/70 border border-[#E4E4E7] text-xs font-medium text-[#18181B] transition-colors"
+                >
+                  ↓ Экспорт JSON
+                </button>
+
+                <label class="cursor-pointer px-3.5 py-2 rounded-xl bg-[#FAF9F6] hover:bg-zinc-200/70 border border-[#E4E4E7] text-xs font-medium text-[#18181B] transition-colors inline-flex items-center">
+                  <span>↑ Импорт JSON</span>
+                  <input id="importJsonInput" type="file" accept=".json,application/json" class="hidden" />
+                </label>
+
+                <button
+                  type="button"
+                  id="copyJsArrayBtn"
+                  class="px-3.5 py-2 rounded-xl bg-[#18181B] hover:bg-zinc-800 text-white text-xs font-medium transition-colors"
+                >
+                  Скопировать JS-массив для кода
+                </button>
+
+                <button
+                  type="button"
+                  id="resetCatalogDefaultsBtn"
+                  class="px-3.5 py-2 rounded-xl bg-white hover:bg-rose-50 border border-[#E4E4E7] hover:border-rose-500 text-xs font-medium text-rose-600 transition-colors"
+                >
+                  Сбросить по умолчанию
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // ==================== КОРЗИНА И ОФОРМЛЕНИЯ ЗАКАЗА ====================
+
+    function updateCartBadge() {
+      const totalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('cartCountBadge').textContent = totalQty;
+    }
+
+    function addToCart(bookId) {
+      const book = state.books.find((b) => b.id === bookId);
+      if (!book) return;
+      const statusInfo = STATUS_META[book.status] || STATUS_META.order_jp;
+      if (!statusInfo.available) return;
+
+      const existing = state.cart.find((c) => c.bookId === bookId);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        state.cart.push({ bookId, qty: 1 });
+      }
+
+      if (state.checkoutStep === 'confirmed') {
+        state.checkoutStep = 'cart';
+      }
+
+      updateCartBadge();
+      renderCatalog();
+      renderCartDrawer();
+      showToast(`«${book.titleRu}» добавлена в корзину`);
+    }
+
+    function changeCartQty(bookId, delta) {
+      const idx = state.cart.findIndex((c) => c.bookId === bookId);
+      if (idx === -1) return;
+
+      state.cart[idx].qty += delta;
+      if (state.cart[idx].qty <= 0) {
+        state.cart.splice(idx, 1);
+      }
+
+      updateCartBadge();
+      renderCatalog();
+      renderCartDrawer();
+    }
+
+    function openCartDrawer() {
+      renderCartDrawer();
+      document.getElementById('cartDrawerOverlay').classList.remove('hidden');
+      updateBodyScrollLock();
+    }
+
+    function closeCartDrawer() {
+      document.getElementById('cartDrawerOverlay').classList.add('hidden');
+      updateBodyScrollLock();
+    }
+
+    function calculateCartTotalRub() {
+      return state.cart.reduce((sum, item) => {
+        const book = state.books.find((b) => b.id === item.bookId);
+        return sum + (book ? book.priceRub * item.qty : 0);
+      }, 0);
+    }
+
+    function renderCartDrawer() {
+      const content = document.getElementById('cartDrawerContent');
+      const footer = document.getElementById('cartDrawerFooter');
+
+      // 1. Экран подтверждения заказа
+      if (state.checkoutStep === 'confirmed' && state.lastOrder) {
+        const order = state.lastOrder;
+        content.innerHTML = `
+          <div class="py-4 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-700 mx-auto flex items-center justify-center mb-4">
+              <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+
+            <span class="inline-block px-2.5 py-1 rounded-md bg-[#FAF9F6] border border-[#E4E4E7] text-xs font-mono text-[#52525B] mb-2">
+              Заявка № ${escapeHtml(order.orderNumber)}
+            </span>
+
+            <h3 class="text-xl font-bold text-[#18181B]">Заявка успешно оформлена</h3>
+            <p class="text-sm text-[#52525B] mt-2 leading-relaxed">
+              Спасибо, <span class="font-medium text-[#18181B]">${escapeHtml(order.name)}</span>! Мы проверим наличие у посредника в Японии и напишем вам в Telegram (<span class="font-medium text-[#18181B]">${escapeHtml(order.contact)}</span>) для подтверждения.
+            </p>
+
+            <div class="mt-5 text-left bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl p-4 space-y-2.5 text-xs">
+              <div class="flex justify-between">
+                <span class="text-[#52525B]">Город доставки:</span>
+                <span class="font-medium text-[#18181B] text-right">${escapeHtml(order.delivery)}</span>
+              </div>
+              ${
+                order.comment
+                  ? `<div class="flex justify-between gap-3">
+                      <span class="text-[#52525B] shrink-0">Комментарий:</span>
+                      <span class="font-medium text-[#18181B] text-right">${escapeHtml(order.comment)}</span>
+                    </div>`
+                  : ''
+              }
+              <div class="border-t border-[#E4E4E7] pt-2.5 space-y-1.5">
+                <p class="text-[#52525B] font-medium">Выбранные издания:</p>
+                ${order.items
+                  .map(
+                    (it) => `
+                  <div class="flex justify-between gap-2 text-[#18181B]">
+                    <span class="line-clamp-1">${escapeHtml(it.title)} × ${it.qty}</span>
+                    <span class="font-medium shrink-0">${escapeHtml(it.priceFormatted)}</span>
+                  </div>
+                `
+                  )
+                  .join('')}
+              </div>
+              <div class="border-t border-[#E4E4E7] pt-2.5 flex justify-between text-sm font-bold text-[#18181B]">
+                <span>Итого:</span>
+                <span>${escapeHtml(order.totalFormatted)}</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              id="copyOrderSummaryBtn"
+              class="mt-4 w-full py-2.5 px-4 rounded-xl bg-white border border-[#E4E4E7] hover:border-[#18181B] text-xs font-medium text-[#18181B] transition-colors inline-flex items-center justify-center gap-2"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+              <span>Скопировать состав заказа</span>
+            </button>
+          </div>
+        `;
+
+        footer.innerHTML = `
+          <button
+            type="button"
+            id="backToCatalogAfterOrderBtn"
+            class="w-full py-3 rounded-xl bg-[#18181B] hover:bg-rose-600 text-white text-sm font-medium transition-colors"
+          >
+            Вернуться в каталог
+          </button>
+        `;
+        return;
+      }
+
+      // 2. Пустая корзина
+      if (state.cart.length === 0) {
+        content.innerHTML = `
+          <div class="h-full flex flex-col items-center justify-center text-center py-12">
+            <div class="w-14 h-14 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center font-serifjp text-2xl text-rose-400 mb-3">
+              空
+            </div>
+            <h3 class="text-base font-semibold text-[#18181B]">Корзина пока пуста</h3>
+            <p class="text-xs sm:text-sm text-[#52525B] mt-1 max-w-xs">
+              Выберите интересующие артбуки, аниме-издания или мангу из каталога, чтобы оформить заявку.
+            </p>
+          </div>
+        `;
+
+        footer.innerHTML = `
+          <button
+            type="button"
+            id="emptyCartCloseBtn"
+            class="w-full py-3 rounded-xl bg-[#18181B] hover:bg-rose-600 text-white text-sm font-medium transition-colors"
+          >
+            Перейти в каталог
+          </button>
+        `;
+        return;
+      }
+
+      const totalRub = calculateCartTotalRub();
+
+      // 3. Форма оформления заказа
+      if (state.checkoutStep === 'form') {
+        content.innerHTML = `
+          <div>
+            <button
+              type="button"
+              id="backToCartListBtn"
+              class="inline-flex items-center gap-1.5 text-xs font-medium text-[#52525B] hover:text-[#18181B] mb-4"
+            >
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              <span>Назад к списку книг (${state.cart.reduce((s, i) => s + i.qty, 0)})</span>
+            </button>
+
+            <h3 class="text-base font-bold text-[#18181B] mb-1">Оформление заказа</h3>
+            <p class="text-xs text-[#52525B] mb-4">
+              Оплата производится после подтверждения выкупа книги у посредника в Японии.
+            </p>
+
+            <form id="checkoutForm" class="space-y-3.5" novalidate>
+              <div>
+                <label for="customerName" class="block text-xs font-medium text-[#18181B] mb-1">
+                  Ваше имя <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  id="customerName"
+                  name="name"
+                  type="text"
+                  required
+                  placeholder="Например, Дмитрий"
+                  class="w-full px-3.5 py-2.5 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label for="customerContact" class="block text-xs font-medium text-[#18181B] mb-1">
+                  Telegram @username для связи <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  id="customerContact"
+                  name="contact"
+                  type="text"
+                  required
+                  placeholder="@username"
+                  class="w-full px-3.5 py-2.5 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label for="customerDelivery" class="block text-xs font-medium text-[#18181B] mb-1">
+                  Город доставки (СДЭК / Почта РФ / Яндекс) <span class="text-rose-600">*</span>
+                </label>
+                <input
+                  id="customerDelivery"
+                  name="delivery"
+                  type="text"
+                  required
+                  placeholder="Санкт-Петербург, Яндекс Доставка"
+                  class="w-full px-3.5 py-2.5 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] focus:bg-white focus:outline-none focus:border-rose-500"
+                />
+              </div>
+
+              <div>
+                <label for="customerComment" class="block text-xs font-medium text-[#18181B] mb-1">
+                  Комментарий (укажите, если нужен фотоотчёт перед отправкой)
+                </label>
+                <textarea
+                  id="customerComment"
+                  name="comment"
+                  rows="2"
+                  placeholder="Например: нужен фотоотчёт перед отправкой или поиск доп. томов..."
+                  class="w-full px-3.5 py-2 bg-[#FAF9F6] border border-[#E4E4E7] rounded-xl text-sm text-[#18181B] focus:bg-white focus:outline-none focus:border-rose-500"
+                ></textarea>
+              </div>
+
+              <p id="formErrorMsg" class="hidden text-xs text-rose-600 font-medium">
+                Пожалуйста, укажите имя, ваш Telegram @username и город доставки.
+              </p>
+            </form>
+          </div>
+        `;
+
+        footer.innerHTML = `
+          <div class="flex items-center justify-between text-sm mb-3">
+            <span class="text-[#52525B]">Итого к заказу:</span>
+            <span class="font-bold text-lg text-[#18181B]">${formatRub(totalRub)}</span>
+          </div>
+          <button
+            type="submit"
+            form="checkoutForm"
+            class="w-full py-3 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-sm font-semibold transition-colors"
+          >
+            Отправить заявку
+          </button>
+        `;
+        return;
+      }
+
+      // 4. Список книг в корзине
+      content.innerHTML = `
+        <div class="space-y-3">
+          ${state.cart
+            .map((item) => {
+              const book = state.books.find((b) => b.id === item.bookId);
+              if (!book) return '';
+              const statusInfo = STATUS_META[book.status] || STATUS_META.order_jp;
+              const lineTotal = formatRub(book.priceRub * item.qty);
+
+              return `
+                <div class="p-3.5 rounded-xl bg-[#FAF9F6] border border-[#E4E4E7] flex gap-3.5">
+                  <div
+                    class="w-12 h-16 rounded-md shrink-0 border border-black/10 flex flex-col justify-between p-1.5 select-none"
+                    style="background-color: ${book.cover?.bg || '#18181B'}; color: ${book.cover?.text || '#FAF9F6'};"
+                  >
+                    <span class="text-[6px] font-mono opacity-75">PGAMES</span>
+                    <span class="font-serifjp text-[8px] leading-tight line-clamp-2">${escapeHtml(book.cover?.jpVertical || '本')}</span>
+                  </div>
+
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-start justify-between gap-2">
+                      <h4 class="text-xs sm:text-sm font-semibold text-[#18181B] leading-snug line-clamp-2">
+                        ${escapeHtml(book.titleRu)}
+                      </h4>
+                      <button
+                        type="button"
+                        data-remove-item="${escapeHtml(book.id)}"
+                        aria-label="Удалить из корзины"
+                        class="text-zinc-400 hover:text-rose-600 p-0.5 shrink-0 transition-colors"
+                      >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+
+                    <span class="inline-block mt-1 text-[10px] font-medium px-2 py-0.5 rounded border ${statusInfo.badgeClass}">
+                      ${statusInfo.label}
+                    </span>
+
+                    <div class="mt-2.5 flex items-center justify-between">
+                      <div class="inline-flex items-center bg-white border border-[#E4E4E7] rounded-lg">
+                        <button
+                          type="button"
+                          data-qty-dec="${escapeHtml(book.id)}"
+                          aria-label="Уменьшить количество"
+                          class="w-7 h-7 flex items-center justify-center text-zinc-600 hover:text-[#18181B] text-sm font-medium"
+                        >
+                          −
+                        </button>
+                        <span class="px-2.5 text-xs font-semibold text-[#18181B]">${item.qty}</span>
+                        <button
+                          type="button"
+                          data-qty-inc="${escapeHtml(book.id)}"
+                          aria-label="Увеличить количество"
+                          class="w-7 h-7 flex items-center justify-center text-zinc-600 hover:text-[#18181B] text-sm font-medium"
+                        >
+                          +
+                        </button>
+                      </div>
+
+                      <span class="text-sm font-bold text-[#18181B]">${lineTotal}</span>
+                    </div>
+                  </div>
+                </div>
+              `;
+            })
+            .join('')}
+        </div>
+      `;
+
+      footer.innerHTML = `
+        <div class="space-y-1.5 mb-3.5">
+          <div class="flex items-center justify-between text-xs text-[#52525B]">
+            <span>Упаковка в пупырчатую плёнку</span>
+            <span class="text-emerald-700 font-medium">Включено</span>
+          </div>
+          <div class="flex items-baseline justify-between pt-1">
+            <span class="text-sm font-medium text-[#18181B]">Итого:</span>
+            <span class="text-lg font-bold text-[#18181B]">${formatRub(totalRub)}</span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          id="proceedToCheckoutBtn"
+          class="w-full py-3 rounded-xl bg-[#18181B] hover:bg-rose-600 text-white text-sm font-semibold transition-colors"
+        >
+          Оформить заказ
+        </button>
+      `;
+    }
+
+    // ==================== TOAST УВЕДОМЛЕНИЯ ====================
+
+    function showToast(message) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className =
+        'pointer-events-auto bg-[#18181B] text-white text-xs sm:text-sm px-4 py-3 rounded-xl shadow-lg border border-zinc-700 flex items-center justify-between gap-3 animate-slide-up';
+      toast.innerHTML = `
+        <span class="line-clamp-2">${escapeHtml(message)}</span>
+        <span class="text-rose-400 font-bold text-xs shrink-0">✦</span>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.18s ease';
+        setTimeout(() => toast.remove(), 200);
+      }, 2500);
+    }
+
+    // ==================== ОБРАБОТЧИКИ СОБЫТИЙ ====================
+
+    function syncSearchInputs(value) {
+      state.searchQuery = value;
+      const dInput = document.getElementById('searchInputDesktop');
+      const mInput = document.getElementById('searchInputMobile');
+      const dClear = document.getElementById('clearSearchDesktop');
+      const mClear = document.getElementById('clearSearchMobile');
+
+      if (dInput.value !== value) dInput.value = value;
+      if (mInput.value !== value) mInput.value = value;
+
+      dClear.classList.toggle('hidden', !value);
+      mClear.classList.toggle('hidden', !value);
+
+      renderCatalog();
+    }
+
+    function copyTextToClipboard(text) {
+      const tempInput = document.createElement('textarea');
+      tempInput.value = text;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPersistedData();
+      applyTelegramSettings();
+      renderFilters();
+      renderCatalog();
+      updateCartBadge();
+
+      // Поиск
+      document.getElementById('searchInputDesktop').addEventListener('input', (e) => syncSearchInputs(e.target.value));
+      document.getElementById('searchInputMobile').addEventListener('input', (e) => syncSearchInputs(e.target.value));
+      document.getElementById('clearSearchDesktop').addEventListener('click', () => syncSearchInputs(''));
+      document.getElementById('clearSearchMobile').addEventListener('click', () => syncSearchInputs(''));
+
+      // Сброс фильтров по клику на логотип или кнопку пустого состояния
+      const resetView = () => {
+        state.category = 'Все';
+        state.availability = 'all';
+        state.sortBy = 'default';
+        document.getElementById('sortSelect').value = 'default';
+        syncSearchInputs('');
+        renderFilters();
+        renderCatalog();
+      };
+
+      document.getElementById('logoResetBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        resetView();
+      });
+      document.getElementById('resetAllFiltersBtn').addEventListener('click', resetView);
+
+      // Фильтры категорий
+      document.getElementById('categoryFilters').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-category]');
+        if (!btn) return;
+        state.category = btn.dataset.category;
+        renderFilters();
+        renderCatalog();
+      });
+
+      // Фильтры наличия
+      document.getElementById('availabilityFilters').addEventListener('click', (e) => {
+        const btn = e.target.closest('[data-availability]');
+        if (!btn) return;
+        state.availability = btn.dataset.availability;
+        renderFilters();
+        renderCatalog();
+      });
+
+      // Сортировка
+      document.getElementById('sortSelect').addEventListener('change', (e) => {
+        state.sortBy = e.target.value;
+        renderCatalog();
+      });
+
+      // Клики по сетке каталога
+      document.getElementById('catalogGrid').addEventListener('click', (e) => {
+        const addBtn = e.target.closest('[data-add-cart]');
+        if (addBtn) {
+          addToCart(addBtn.dataset.addCart);
+          return;
+        }
+        const openTrigger = e.target.closest('[data-open-book]');
+        if (openTrigger) {
+          openBookModal(openTrigger.dataset.openBook);
+        }
+      });
+
+      document.getElementById('catalogGrid').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          const openTrigger = e.target.closest('[data-open-book]');
+          if (openTrigger) openBookModal(openTrigger.dataset.openBook);
+        }
+      });
+
+      // Модальное окно книги
+      document.getElementById('closeBookModalBtn').addEventListener('click', closeBookModal);
+      document.getElementById('bookModal').addEventListener('click', (e) => {
+        if (e.target.id === 'bookModal') closeBookModal();
+        const modalAdd = e.target.closest('[data-modal-add-cart]');
+        if (modalAdd) {
+          const bookId = modalAdd.dataset.modalAddCart;
+          addToCart(bookId);
+          openBookModal(bookId);
+        }
+      });
+
+      // Панель управления каталогом (Admin)
+      document.getElementById('openAdminBtn').addEventListener('click', () => openAdminModal('books'));
+      document.getElementById('closeAdminModalBtn').addEventListener('click', closeAdminModal);
+      document.getElementById('adminModal').addEventListener('click', (e) => {
+        if (e.target.id === 'adminModal') closeAdminModal();
+      });
+
+      // Переключение вкладок в админке
+      document.querySelectorAll('.admin-tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          state.adminTab = btn.dataset.adminTab;
+          if (state.adminTab !== 'form') {
+            state.editingBookId = null;
+          }
+          renderAdminModal();
+        });
+      });
+
+      // Делегирование событий внутри панели управления
+      const adminContent = document.getElementById('adminModalContent');
+
+      adminContent.addEventListener('input', (e) => {
+        if (e.target.id === 'adminSearchInput') {
+          state.adminSearch = e.target.value;
+          renderAdminModal();
+          const inp = document.getElementById('adminSearchInput');
+          if (inp) {
+            inp.focus();
+            inp.setSelectionRange(inp.value.length, inp.value.length);
+          }
+          return;
+        }
+
+        // Инлайн-изменение цены
+        if (e.target.dataset.inlinePrice) {
+          const id = e.target.dataset.inlinePrice;
+          const book = state.books.find((b) => b.id === id);
+          if (book) {
+            book.priceRub = Math.max(0, Number(e.target.value) || 0);
+            saveBooksToStorage();
+            renderCatalog();
+          }
+        }
+      });
+
+      adminContent.addEventListener('change', (e) => {
+        // Инлайн-изменение статуса наличия
+        if (e.target.dataset.inlineStatus) {
+          const id = e.target.dataset.inlineStatus;
+          const book = state.books.find((b) => b.id === id);
+          if (book) {
+            book.status = e.target.value;
+            saveBooksToStorage();
+            renderCatalog();
+            showToast(`Статус обновлён: «${book.titleRu}»`);
+          }
+          return;
+        }
+
+        // Импорт JSON-файла каталога
+        if (e.target.id === 'importJsonInput') {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            try {
+              const parsed = JSON.parse(String(ev.target?.result || ''));
+              if (Array.isArray(parsed)) {
+                state.books = parsed;
+              } else if (parsed && Array.isArray(parsed.books)) {
+                state.books = parsed.books;
+                if (parsed.settings) {
+                  state.settings = { ...state.settings, ...parsed.settings };
+                  saveSettingsToStorage();
+                  applyTelegramSettings();
+                }
+              } else {
+                throw new Error('Неверный формат');
+              }
+              saveBooksToStorage();
+              renderCatalog();
+              renderAdminModal();
+              showToast('Каталог успешно импортирован из JSON');
+            } catch (err) {
+              showToast('Ошибка: некорректный JSON-файл');
+            }
+          };
+          reader.readAsText(file);
+        }
+      });
+
+      adminContent.addEventListener('click', (e) => {
+        if (e.target.id === 'adminQuickAddBtn') {
+          state.editingBookId = null;
+          state.adminTab = 'form';
+          renderAdminModal();
+          return;
+        }
+
+        const editBtn = e.target.closest('[data-edit-book]');
+        if (editBtn) {
+          state.editingBookId = editBtn.dataset.editBook;
+          state.adminTab = 'form';
+          renderAdminModal();
+          return;
+        }
+
+        const delBtn = e.target.closest('[data-delete-book]');
+        if (delBtn) {
+          const id = delBtn.dataset.deleteBook;
+          const book = state.books.find((b) => b.id === id);
+          state.books = state.books.filter((b) => b.id !== id);
+          state.cart = state.cart.filter((c) => c.bookId !== id);
+          saveBooksToStorage();
+          updateCartBadge();
+          renderCatalog();
+          renderAdminModal();
+          if (book) showToast(`Удалено: «${book.titleRu}»`);
+          return;
+        }
+
+        if (e.target.id === 'cancelEditBookBtn' || e.target.id === 'backToAdminListBtn') {
+          state.editingBookId = null;
+          state.adminTab = 'books';
+          renderAdminModal();
+          return;
+        }
+
+        if (e.target.id === 'exportJsonBtn') {
+          const payload = JSON.stringify({ settings: state.settings, books: state.books }, null, 2);
+          const blob = new Blob([payload], { type: 'application/json' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `pgames-catalog-${new Date().toISOString().slice(0, 10)}.json`;
+          a.click();
+          URL.revokeObjectURL(url);
+          showToast('Файл каталога JSON скачан');
+          return;
+        }
+
+        if (e.target.id === 'copyJsArrayBtn') {
+          const codeSnippet = `const DEFAULT_BOOKS = ${JSON.stringify(state.books, null, 2)};`;
+          copyTextToClipboard(codeSnippet);
+          showToast('JS-массив DEFAULT_BOOKS скопирован в буфер');
+          return;
+        }
+
+        if (e.target.id === 'resetCatalogDefaultsBtn') {
+          state.books = JSON.parse(JSON.stringify(DEFAULT_BOOKS));
+          state.settings = { ...DEFAULT_SETTINGS };
+          saveBooksToStorage();
+          saveSettingsToStorage();
+          applyTelegramSettings();
+          renderCatalog();
+          renderAdminModal();
+          showToast('Каталог сброшен к исходному виду');
+        }
+      });
+
+      adminContent.addEventListener('submit', (e) => {
+        // Сохранение новой или отредактированной книги
+        if (e.target.id === 'bookEditorForm') {
+          e.preventDefault();
+          const fd = new FormData(e.target);
+
+          const titleRu = String(fd.get('titleRu') || '').trim();
+          const author = String(fd.get('author') || '').trim();
+          if (!titleRu || !author) return;
+
+          const existingBook = state.editingBookId
+            ? state.books.find((b) => b.id === state.editingBookId)
+            : null;
+
+          const coverBg = String(fd.get('coverBg') || '#18181B');
+          const coverAccent = String(fd.get('coverAccent') || '#D93829');
+          const jpVertical = String(fd.get('jpVertical') || '日本書籍').trim();
+
+          const updatedBook = {
+            id: existingBook ? existingBook.id : `book-${Date.now()}`,
+            titleRu,
+            titleJp: String(fd.get('titleJp') || '').trim(),
+            author,
+            publisher: String(fd.get('publisher') || 'Японское издательство').trim(),
+            category: String(fd.get('category') || 'Аниме'),
+            status: String(fd.get('status') || 'order_jp'),
+            priceRub: Math.max(0, Number(fd.get('priceRub')) || 0),
+            year: Number(fd.get('year')) || new Date().getFullYear(),
+            pages: Number(fd.get('pages')) || 200,
+            format: String(fd.get('format') || '').trim(),
+            imageUrl: String(fd.get('imageUrl') || '').trim(),
+            description: String(fd.get('description') || '').trim(),
+            isNew: fd.get('isNew') === 'on',
+            cover: {
+              bg: coverBg,
+              accent: coverAccent,
+              text: coverBg.toLowerCase() === '#ffffff' || coverBg.toLowerCase() === '#faf9f6' ? '#18181B' : '#FAF9F6',
+              obiBg: coverAccent,
+              obiText: '#FFFFFF',
+              jpVertical,
+              code: existingBook?.cover?.code || 'JP EDITION',
+              motif: existingBook?.cover?.motif || 'crest'
+            }
+          };
+
+          if (existingBook) {
+            const idx = state.books.findIndex((b) => b.id === existingBook.id);
+            state.books[idx] = updatedBook;
+            showToast(`Сохранено: «${updatedBook.titleRu}»`);
+          } else {
+            state.books.unshift(updatedBook);
+            showToast(`Добавлена книга: «${updatedBook.titleRu}»`);
+          }
+
+          saveBooksToStorage();
+          state.editingBookId = null;
+          state.adminTab = 'books';
+          renderCatalog();
+          renderAdminModal();
+          return;
+        }
+
+        // Сохранение настроек Telegram
+        if (e.target.id === 'tgSettingsForm') {
+          e.preventDefault();
+          const fd = new FormData(e.target);
+          state.settings.tgUrl = String(fd.get('tgUrl') || DEFAULT_SETTINGS.tgUrl).trim();
+          state.settings.tgLabel = String(fd.get('tgLabel') || DEFAULT_SETTINGS.tgLabel).trim();
+          saveSettingsToStorage();
+          applyTelegramSettings();
+          showToast('Ссылка на Telegram-канал обновлена');
+        }
+      });
+
+      // Корзина и оформление заказа
+      document.getElementById('openCartBtn').addEventListener('click', openCartDrawer);
+      document.getElementById('closeCartBtn').addEventListener('click', closeCartDrawer);
+      document.getElementById('cartDrawerOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'cartDrawerOverlay') closeCartDrawer();
+      });
+
+      document.getElementById('cartDrawerPanel').addEventListener('click', (e) => {
+        const incBtn = e.target.closest('[data-qty-inc]');
+        if (incBtn) {
+          changeCartQty(incBtn.dataset.qtyInc, 1);
+          return;
+        }
+
+        const decBtn = e.target.closest('[data-qty-dec]');
+        if (decBtn) {
+          changeCartQty(decBtn.dataset.qtyDec, -1);
+          return;
+        }
+
+        const remBtn = e.target.closest('[data-remove-item]');
+        if (remBtn) {
+          const id = remBtn.dataset.removeItem;
+          state.cart = state.cart.filter((c) => c.bookId !== id);
+          updateCartBadge();
+          renderCatalog();
+          renderCartDrawer();
+          return;
+        }
+
+        if (e.target.closest('#proceedToCheckoutBtn')) {
+          state.checkoutStep = 'form';
+          renderCartDrawer();
+          return;
+        }
+
+        if (e.target.closest('#backToCartListBtn')) {
+          state.checkoutStep = 'cart';
+          renderCartDrawer();
+          return;
+        }
+
+        if (e.target.closest('#emptyCartCloseBtn') || e.target.closest('#backToCatalogAfterOrderBtn')) {
+          if (state.checkoutStep === 'confirmed') {
+            state.checkoutStep = 'cart';
+          }
+          closeCartDrawer();
+          return;
+        }
+
+        if (e.target.closest('#copyOrderSummaryBtn') && state.lastOrder) {
+          const o = state.lastOrder;
+          const summaryText = [
+            `Заявка Pgames №${o.orderNumber}`,
+            `Имя: ${o.name}`,
+            `Telegram: ${o.contact}`,
+            `Доставка: ${o.delivery}`,
+            'Состав:',
+            ...o.items.map((i) => `- ${i.title} × ${i.qty} (${i.priceFormatted})`),
+            `Итого: ${o.totalFormatted}`
+          ].join('\n');
+
+          copyTextToClipboard(summaryText);
+          showToast('Детали заказа скопированы в буфер');
+        }
+      });
+
+      document.getElementById('cartDrawerPanel').addEventListener('submit', (e) => {
+        if (e.target.id !== 'checkoutForm') return;
+        e.preventDefault();
+
+        const form = e.target;
+        const name = form.name.value.trim();
+        const contact = form.contact.value.trim();
+        const delivery = form.delivery.value.trim();
+        const comment = form.comment.value.trim();
+        const errorEl = document.getElementById('formErrorMsg');
+
+        if (!name || !contact || !delivery) {
+          errorEl.classList.remove('hidden');
+          return;
+        }
+
+        errorEl.classList.add('hidden');
+        const totalRub = calculateCartTotalRub();
+        const orderNumber = `PG-${Math.floor(10000 + Math.random() * 90000)}`;
+
+        state.lastOrder = {
+          orderNumber,
+          name,
+          contact,
+          delivery,
+          comment,
+          items: state.cart.map((item) => {
+            const b = state.books.find((book) => book.id === item.bookId);
+            return {
+              title: b ? b.titleRu : item.bookId,
+              qty: item.qty,
+              priceFormatted: b ? formatRub(b.priceRub * item.qty) : ''
+            };
+          }),
+          totalFormatted: formatRub(totalRub)
+        };
+
+        state.cart = [];
+        state.checkoutStep = 'confirmed';
+        updateCartBadge();
+        renderCatalog();
+        renderCartDrawer();
+      });
+
+      // Закрытие всех окон по клавише Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeBookModal();
+          closeAdminModal();
+          closeCartDrawer();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
